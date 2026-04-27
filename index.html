@@ -306,7 +306,36 @@ input[type=color].cpicker{position:absolute;inset:0;width:100%;height:100%;opaci
 .edit-item-row span{flex:1}
 .edit-item-qty{width:60px;background:var(--black);border:1px solid var(--border);color:var(--cream);padding:5px 8px;font-family:var(--ff-body);font-size:11px;text-align:center;outline:none;-moz-appearance:textfield}
 .edit-item-qty::-webkit-outer-spin-button,.edit-item-qty::-webkit-inner-spin-button{-webkit-appearance:none}
-/* PDF */
+/* Stock badges */
+.stock-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;font-size:8px;letter-spacing:2px;text-transform:uppercase;border:1px solid;white-space:nowrap}
+.stock-ok{color:#27ae60;border-color:#27ae60;background:rgba(39,174,96,.08)}
+.stock-low{color:#f39c12;border-color:#f39c12;background:rgba(243,156,18,.08)}
+.stock-out{color:var(--red);border-color:var(--red);background:rgba(192,57,43,.08)}
+.stock-unlim{color:var(--muted);border-color:var(--border)}
+.preorder-badge{display:inline-block;padding:2px 8px;font-size:8px;letter-spacing:2px;text-transform:uppercase;border:1px solid #9b59b6;color:#9b59b6;background:rgba(155,89,182,.08);white-space:nowrap}
+/* table stock column */
+.stock-cell{text-align:center;min-width:110px}
+/* qty warning */
+.qty-over{border-color:#f39c12!important}
+.qty-preorder{border-color:#9b59b6!important}
+/* preorder note in calc */
+.preorder-note{font-size:9px;color:#9b59b6;letter-spacing:1px;margin-top:2px}
+/* stock warning banner in calc */
+.stock-warn-row td{background:rgba(155,89,182,.06);padding:10px 24px}
+.stock-warn-row .sw-text{font-size:10px;color:#9b59b6;letter-spacing:1px;line-height:1.7}
+/* preorder modal highlight */
+.preorder-section{background:rgba(155,89,182,.07);border:1px solid rgba(155,89,182,.3);padding:14px 18px;margin:14px 0}
+.preorder-section-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#9b59b6;margin-bottom:8px}
+.stock-admin-row{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.stock-admin-row:last-child{border-bottom:none}
+.stock-name{font-size:12px;color:var(--text)}
+.stock-name small{display:block;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.stock-inp{width:100%;background:var(--black);border:1px solid var(--border);color:var(--cream);padding:8px 10px;font-family:var(--ff-body);font-size:12px;text-align:center;outline:none;transition:border-color .2s;-moz-appearance:textfield}
+.stock-inp::-webkit-outer-spin-button,.stock-inp::-webkit-inner-spin-button{-webkit-appearance:none}
+.stock-inp:focus{border-color:var(--gold-dim)}
+.stock-unlim-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 12px;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;white-space:nowrap}
+.stock-unlim-btn:hover{border-color:var(--gold-dim);color:var(--gold)}
+.stock-group-title{font-family:var(--ff-display);font-size:18px;color:var(--gold);margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .pdf-preview{display:flex;align-items:center;gap:10px;padding:10px;background:rgba(201,168,76,.05);border:1px solid var(--border);margin-top:8px}
 .pdf-preview a{font-size:10px;color:var(--gold);text-decoration:none;letter-spacing:1px}
 .pdf-preview a:hover{text-decoration:underline}
@@ -397,7 +426,7 @@ input[type=color].cpicker{position:absolute;inset:0;width:100%;height:100%;opaci
     </div>
     <div class="calc-table-wrap">
       <table>
-        <thead><tr><th>Позиция</th><th>Цена (₽)</th><th>Количество</th><th>Сумма (₽)</th></tr></thead>
+        <thead><tr><th>Позиция</th><th>Цена (₽)</th><th>В наличии</th><th>Количество</th><th>Сумма (₽)</th></tr></thead>
         <tbody id="calc-body"></tbody>
       </table>
     </div>
@@ -554,6 +583,63 @@ input[type=color].cpicker{position:absolute;inset:0;width:100%;height:100%;opaci
   </div>
 </div>
 
+<!-- PRE-ORDER MODAL -->
+<div class="moverlay" id="preorder-modal">
+  <div class="mbox" style="max-width:680px">
+    <div class="mtitle">Подтверждение заказа</div>
+    <div class="msub" id="po-sub">Часть товара оформляется как предзаказ</div>
+    <div id="po-instock-wrap" style="display:none">
+      <div class="msep">Товар в наличии — будет отправлен сразу</div>
+      <ul class="mlist" id="po-instock-list"></ul>
+    </div>
+    <div id="po-preorder-wrap" style="display:none">
+      <div class="preorder-section">
+        <div class="preorder-section-title">🕐 Предзаказ — будет согласован с менеджером</div>
+        <ul class="mlist" id="po-preorder-list" style="margin:0"></ul>
+      </div>
+      <p style="font-size:11px;color:var(--muted);line-height:1.8;margin-top:8px">
+        По позициям предзаказа мы свяжемся с вами и обсудим сроки поставки и условия.
+      </p>
+    </div>
+    <div class="mtotal"><span>Итого</span><span id="po-total"></span></div>
+    <div class="msep">Контактные данные</div>
+    <div class="frow">
+      <div class="fcol"><label class="flabel">ФИО <span class="req">*</span></label>
+        <input class="finput" id="po-fio" placeholder="Иванов Иван Иванович">
+        <span class="ferr" id="poe-fio">Введите фамилию и имя (2–3 слова)</span></div>
+      <div class="fcol"><label class="flabel">Телефон <span class="req">*</span></label>
+        <input class="finput" id="po-phone" placeholder="+71234567890">
+        <span class="ferr" id="poe-phone">Формат: +7 и 10 цифр</span></div>
+    </div>
+    <div class="frow">
+      <div class="fcol ffull"><label class="flabel">Email</label>
+        <input class="finput" id="po-email" placeholder="mail@example.com">
+        <span class="ferr" id="poe-email">Некорректный email</span></div>
+    </div>
+    <div class="frow">
+      <div class="fcol ffull"><label class="flabel">Комментарий</label>
+        <textarea class="finput" id="po-comment" placeholder="Адрес доставки, пожелания..."></textarea></div>
+    </div>
+    <div class="pd-section">
+      <div class="pd-check"><input type="checkbox" id="po-pd1"><label for="po-pd1" id="po-pd1-label">Я согласен на обработку моих персональных данных</label></div>
+      <div class="pd-check"><input type="checkbox" id="po-pd2"><label for="po-pd2" id="po-pd2-label">Я согласен с политикой обработки персональных данных</label></div>
+    </div>
+    <span class="ferr" id="poe-pd">Подтвердите согласие с обоими пунктами</span>
+    <div class="mactions">
+      <button class="mbtn p" onclick="submitPreOrder()">Отправить заказ →</button>
+      <button class="mbtn s" onclick="closeModal('preorder-modal')">Назад</button>
+    </div>
+    <div id="po-success" style="display:none">
+      <div class="success-wrap">
+        <div class="success-icon">✓</div>
+        <div class="success-title">Заказ принят!</div>
+        <div class="success-sub" id="po-success-sub">Мы свяжемся с вами в ближайшее время</div>
+        <button class="mbtn p" onclick="closeModal('preorder-modal')">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ADMIN LOGIN -->
 <div id="admin-login">
   <div class="lbox">
@@ -573,6 +659,7 @@ input[type=color].cpicker{position:absolute;inset:0;width:100%;height:100%;opaci
   <div class="aside">
     <div class="aside-logo">ADMIN</div>
     <button class="anav act" onclick="showTab('t-orders',this)">Заказы<span class="badge" id="nbadge" style="display:none">0</span></button>
+    <button class="anav" onclick="showTab('t-stock',this)">Склад</button>
     <button class="anav" onclick="showTab('t-products',this)">Товары и вкусы</button>
     <button class="anav" onclick="showTab('t-photos',this)">Фотографии</button>
     <button class="anav" onclick="showTab('t-docs',this)">Документы</button>
@@ -597,6 +684,18 @@ input[type=color].cpicker{position:absolute;inset:0;width:100%;height:100%;opaci
         <button class="ofbtn" onclick="filterOrders('done',this)">Выполненные</button>
       </div>
       <div id="orders-list"></div>
+    </div>
+
+    <!-- СКЛАД -->
+    <div class="atab" id="t-stock">
+      <div class="atitle">Склад</div>
+      <div class="asub">Остатки товара — укажите количество или оставьте пустым для неограниченного</div>
+      <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+        <button class="asave" onclick="saveStock()">Сохранить остатки</button>
+        <span class="amsg" id="am-stock">✓ Сохранено</span>
+        <button class="mbtn s" onclick="resetAllStock()" style="margin-left:auto">Сбросить весь склад</button>
+      </div>
+      <div id="stock-admin-list"></div>
     </div>
 
     <!-- PRODUCTS -->
@@ -887,7 +986,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   applyColors();
   const savedFont=LS('font','classic');
   if(savedFont!=='classic')applyFont(savedFont,null);
-  applyTexts();renderProducts();renderCalc();renderContacts();updatePDCheckboxes();updateBadge();renderDocsPublic();
+  applyTexts();renderProducts();renderCalc();renderContacts();updatePDCheckboxes('');updateBadge();renderDocsPublic();
 });
 
 /* ═══════ COLORS ═══════ */
@@ -980,16 +1079,17 @@ function applyTexts(){
 }
 
 /* ═══════ PERSONAL DATA ═══════ */
-function updatePDCheckboxes(){
+function updatePDCheckboxes(prefix){
+  prefix=prefix||'';
   const pd=gPD();
-  const l1=document.getElementById('pd1-label');
-  const l2=document.getElementById('pd2-label');
+  const l1=document.getElementById(prefix+'pd1-label');
+  const l2=document.getElementById(prefix+'pd2-label');
   if(l1){
-    l1.innerHTML=pd.t1||DEF_TXT.t1;
+    l1.innerHTML=pd.t1||'Я согласен на обработку моих персональных данных';
     if(pd.url1){l1.innerHTML+=` <a href="${pd.url1}" target="_blank">${pd.lt1||'— ознакомиться'}</a>`;}
   }
   if(l2){
-    l2.innerHTML=pd.t2||DEF_TXT.t2;
+    l2.innerHTML=pd.t2||'Я согласен с политикой обработки персональных данных';
     if(pd.url2){l2.innerHTML+=` <a href="${pd.url2}" target="_blank">${pd.lt2||'— ознакомиться'}</a>`;}
   }
 }
@@ -1075,30 +1175,75 @@ function renderCalc(){
   b.innerHTML='';
   prods.forEach(p=>{
     const cr=document.createElement('tr');cr.className='cat-row';
-    cr.innerHTML=`<td colspan="4">${p.name} — ${p.pw.toLocaleString('ru')} ₽ / шт</td>`;
+    cr.innerHTML=`<td colspan="5">${p.name} — ${p.pw.toLocaleString('ru')} ₽ / шт</td>`;
     b.appendChild(cr);
     p.flavors.forEach((f,i)=>{
-      const uid=`${p.id}_${i}`,tr=document.createElement('tr');
-      tr.innerHTML=`<td><div class="td-en">${f.en}</div><div class="td-ru">${f.ru}</div></td>
+      const uid=`${p.id}_${i}`;
+      const st=getStock(p.id,i);
+      const stockHtml=stockBadgeHtml(st);
+      const isOut=st!==null&&st===0;
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td><div class="td-en">${f.en}</div><div class="td-ru">${f.ru}</div></td>
         <td><div class="td-price">${p.pw.toLocaleString('ru')} <span class="td-sm">₽</span></div></td>
-        <td><input class="qty" type="number" min="0" step="1" id="q-${uid}" value="0" oninput="updCalc()" onchange="updCalc()"></td>
-        <td><div class="td-total" id="t-${uid}">—</div></td>`;
+        <td class="stock-cell">${stockHtml}</td>
+        <td><input class="qty" type="number" min="0" step="1" id="q-${uid}" value="0"
+          ${isOut?'placeholder="0" title="Нет в наличии"':''}
+          oninput="updCalc()" onchange="updCalc()"></td>
+        <td><div class="td-total" id="t-${uid}">—</div><div class="preorder-note" id="po-note-${uid}" style="display:none">предзаказ</div></td>`;
       b.appendChild(tr);
     });
   });
 }
 
+function stockBadgeHtml(st){
+  if(st===null)return `<span class="stock-badge stock-unlim">∞ без лимита</span>`;
+  if(st===0)return `<span class="stock-badge stock-out">✕ нет в наличии</span>`;
+  if(st<=5)return `<span class="stock-badge stock-low">⚡ ${st} шт</span>`;
+  return `<span class="stock-badge stock-ok">✓ ${st} шт</span>`;
+}
+
 function updCalc(){
-  const prods=gP();let s=0,u=0,it=0;
+  const prods=gP();let s=0,u=0,it=0;let hasPreorder=false;
   prods.forEach(p=>p.flavors.forEach((f,i)=>{
-    const uid=`${p.id}_${i}`,qty=parseInt(document.getElementById('q-'+uid)?.value)||0,line=qty*p.pw;
+    const uid=`${p.id}_${i}`;
+    const qty=parseInt(document.getElementById('q-'+uid)?.value)||0;
+    const st=getStock(p.id,i);
+    const line=qty*p.pw;
     const el=document.getElementById('t-'+uid);
+    const note=document.getElementById('po-note-'+uid);
+    const inp=document.getElementById('q-'+uid);
     if(el)el.textContent=qty>0?line.toLocaleString('ru')+' ₽':'—';
-    if(qty>0){it++;u+=qty;s+=line;}
+    if(inp){inp.classList.remove('qty-over','qty-preorder');}
+    if(note)note.style.display='none';
+    if(qty>0){
+      it++;u+=qty;s+=line;
+      if(st!==null){
+        const preorderQty=Math.max(0,qty-st);
+        if(preorderQty>0){
+          hasPreorder=true;
+          if(inp)inp.classList.add('qty-preorder');
+          if(note){
+            note.style.display='block';
+            note.textContent=st===0?'всё — предзаказ':`${preorderQty} шт — предзаказ`;
+          }
+        }
+      }
+    }
   }));
   document.getElementById('s-items').textContent=it;
   document.getElementById('s-units').textContent=u;
   document.getElementById('s-total').textContent=s>0?s.toLocaleString('ru')+' ₽':'0 ₽';
+  // show/hide global preorder notice
+  let notice=document.getElementById('stock-global-notice');
+  if(!notice){
+    notice=document.createElement('div');notice.id='stock-global-notice';
+    notice.style.cssText='padding:10px 24px 4px;font-size:10px;color:#9b59b6;letter-spacing:1px;display:none';
+    notice.textContent='🕐 Позиции с фиолетовой пометкой будут оформлены как предзаказ — мы свяжемся с вами для согласования сроков.';
+    const wrap=document.getElementById('calc-body')?.parentElement?.parentElement;
+    if(wrap)wrap.appendChild(notice);
+  }
+  if(notice)notice.style.display=hasPreorder?'block':'none';
 }
 function clearAll(){document.querySelectorAll('.qty').forEach(e=>e.value=0);updCalc();}
 
@@ -1113,6 +1258,65 @@ function renderContacts(){
   if(c.em)el.innerHTML+=`<a class="cbtn" href="mailto:${c.em}">${c.em}</a>`;
   if(!c.tg&&!c.wa&&!c.ph&&!c.em)
     el.innerHTML='<p style="font-size:11px;color:var(--muted);letter-spacing:2px">Добавьте контакты в панели администратора</p>';
+}
+
+/* ═══════ STOCK ═══════ */
+function gStock(){return LS('stock',{});}
+function getStock(prodId,flIdx){
+  const s=gStock();
+  const key=`${prodId}_${flIdx}`;
+  const val=s[key];
+  return val===undefined||val===null||val===''?null:parseInt(val);
+}
+function setStock(prodId,flIdx,qty){
+  const s=gStock();
+  const key=`${prodId}_${flIdx}`;
+  if(qty===null||qty===''||isNaN(qty)){delete s[key];}
+  else{s[key]=Math.max(0,parseInt(qty));}
+  SS('stock',s);
+}
+
+function renderStockAdmin(){
+  const prods=gP(),el=document.getElementById('stock-admin-list');
+  if(!el)return;
+  el.innerHTML=prods.map((p,pi)=>`
+    <div class="stock-group-title">${p.name}</div>
+    ${p.flavors.map((f,fi)=>{
+      const st=getStock(p.id,fi);
+      return `<div class="stock-admin-row">
+        <div class="stock-name">${f.en}<small>${f.ru}</small></div>
+        <input class="stock-inp" type="number" min="0" step="1"
+          id="si-${p.id}-${fi}"
+          value="${st===null?'':st}"
+          placeholder="∞ без лимита">
+        <button class="stock-unlim-btn" onclick="clearStockField('${p.id}',${fi})">∞</button>
+      </div>`;
+    }).join('')}`).join('');
+}
+
+function clearStockField(prodId,fi){
+  const inp=document.getElementById(`si-${prodId}-${fi}`);
+  if(inp)inp.value='';
+}
+
+function saveStock(){
+  const prods=gP();
+  prods.forEach(p=>{
+    p.flavors.forEach((f,fi)=>{
+      const inp=document.getElementById(`si-${p.id}-${fi}`);
+      if(inp){
+        const val=inp.value.trim();
+        setStock(p.id,fi,val===''?null:parseInt(val));
+      }
+    });
+  });
+  renderCalc();updCalc();
+  showMsg('am-stock');
+}
+
+function resetAllStock(){
+  if(!confirm('Сбросить все остатки? Весь склад станет неограниченным.'))return;
+  SS('stock',{});renderStockAdmin();renderCalc();updCalc();showMsg('am-stock');
 }
 
 /* ═══════ VALIDATION ═══════ */
@@ -1135,55 +1339,162 @@ function openOrderModal(){
   const prods=gP();const items=[];let total=0;
   prods.forEach(p=>p.flavors.forEach((f,i)=>{
     const qty=parseInt(document.getElementById(`q-${p.id}_${i}`)?.value)||0;
-    if(qty>0){const line=qty*p.pw;total+=line;items.push({name:`${f.en} / ${f.ru}`,qty,pw:p.pw,line});}
+    if(qty>0){
+      const st=getStock(p.id,i);
+      const inStockQty=st===null?qty:Math.min(qty,st);
+      const preQty=st===null?0:Math.max(0,qty-st);
+      const line=qty*p.pw;total+=line;
+      items.push({name:`${f.en} / ${f.ru}`,qty,pw:p.pw,line,inStockQty,preQty,prodId:p.id,flIdx:i});
+    }
   }));
   if(!items.length){alert('Добавьте товары в заказ');return;}
-  document.getElementById('mlist').innerHTML=items.map(it=>`<li><span>${it.name} × ${it.qty}</span><span>${it.line.toLocaleString('ru')} ₽</span></li>`).join('');
-  document.getElementById('mtotal').textContent=total.toLocaleString('ru')+' ₽';
-  ['f-fio','f-phone','f-email','f-comment'].forEach(id=>document.getElementById(id).value='');
-  document.querySelectorAll('.ferr').forEach(e=>{e.style.display='none';});
-  document.querySelectorAll('.finput').forEach(e=>e.classList.remove('error'));
-  document.getElementById('pd1').checked=false;document.getElementById('pd2').checked=false;
-  document.getElementById('ostep1').style.display='block';
-  document.getElementById('ostep2').style.display='none';
-  document.getElementById('order-modal').classList.add('open');
+
+  const hasPreorder=items.some(it=>it.preQty>0);
+
+  if(hasPreorder){
+    // open pre-order modal
+    openPreOrderModal(items,total);
+  } else {
+    // regular order modal
+    document.getElementById('mlist').innerHTML=items.map(it=>`<li><span>${it.name} × ${it.qty}</span><span>${it.line.toLocaleString('ru')} ₽</span></li>`).join('');
+    document.getElementById('mtotal').textContent=total.toLocaleString('ru')+' ₽';
+    ['f-fio','f-phone','f-email','f-comment'].forEach(id=>document.getElementById(id).value='');
+    document.querySelectorAll('.ferr').forEach(e=>e.style.display='none');
+    document.querySelectorAll('.finput').forEach(e=>e.classList.remove('error'));
+    document.getElementById('pd1').checked=false;document.getElementById('pd2').checked=false;
+    document.getElementById('ostep1').style.display='block';
+    document.getElementById('ostep2').style.display='none';
+    document.getElementById('order-modal').classList.add('open');
+  }
 }
 
 function submitOrder(){
   const fio=v('f-fio'),phone=v('f-phone'),email=v('f-email'),comment=v('f-comment');
   let ok=true;
-
   if(!validateFIO(fio)){setErr('f-fio','e-fio',true);ok=false;}else setErr('f-fio','e-fio',false);
   if(!validatePhone(phone)){setErr('f-phone','e-phone',true);ok=false;}else setErr('f-phone','e-phone',false);
   if(email&&!validateEmail(email)){setErr('f-email','e-email',true);ok=false;}else setErr('f-email','e-email',false);
-
   const pd1=document.getElementById('pd1')?.checked;
   const pd2=document.getElementById('pd2')?.checked;
   const epd=document.getElementById('e-pd');
   if(!pd1||!pd2){if(epd)epd.style.display='block';ok=false;}else{if(epd)epd.style.display='none';}
-
   if(!ok)return;
 
   const prods=gP();const items=[];let total=0;
   prods.forEach(p=>p.flavors.forEach((f,i)=>{
     const qty=parseInt(document.getElementById(`q-${p.id}_${i}`)?.value)||0;
-    if(qty>0){const line=qty*p.pw;total+=line;items.push({name:f.en+' / '+f.ru,qty,line,prodName:p.name});}
+    if(qty>0){const line=qty*p.pw;total+=line;items.push({name:f.en+' / '+f.ru,qty,line,pw:p.pw,prodName:p.name,prodId:p.id,flIdx:i});}
   }));
 
-  const order={id:'ORD-'+Date.now(),date:new Date().toLocaleString('ru'),status:'new',
-    customer:{fio,phone,email,comment},items,total,history:[]};
+  finalizeOrder({fio,phone,email,comment},items,total,'order');
+}
+
+/* ─── Pre-order modal ─── */
+let _poItems=[];
+function openPreOrderModal(items,total){
+  _poItems=items;
+  const instockItems=items.filter(it=>it.inStockQty>0);
+  const preItems=items.filter(it=>it.preQty>0);
+
+  const instockWrap=document.getElementById('po-instock-wrap');
+  const preWrap=document.getElementById('po-preorder-wrap');
+
+  if(instockItems.length){
+    instockWrap.style.display='block';
+    document.getElementById('po-instock-list').innerHTML=instockItems.map(it=>`
+      <li><span>${it.name} × ${it.inStockQty}</span><span>${(it.inStockQty*it.pw).toLocaleString('ru')} ₽</span></li>`).join('');
+  } else instockWrap.style.display='none';
+
+  if(preItems.length){
+    preWrap.style.display='block';
+    document.getElementById('po-preorder-list').innerHTML=preItems.map(it=>`
+      <li><span>${it.name} × ${it.preQty} <span class="preorder-badge">предзаказ</span></span><span>${(it.preQty*it.pw).toLocaleString('ru')} ₽</span></li>`).join('');
+  } else preWrap.style.display='none';
+
+  document.getElementById('po-total').textContent=total.toLocaleString('ru')+' ₽';
+  document.getElementById('po-sub').textContent=
+    instockItems.length&&preItems.length?'Часть товара оформляется как предзаказ':
+    preItems.length?'Весь заказ оформляется как предзаказ — свяжемся для согласования':'';
+
+  ['po-fio','po-phone','po-email','po-comment'].forEach(id=>document.getElementById(id).value='');
+  document.querySelectorAll('#preorder-modal .ferr').forEach(e=>e.style.display='none');
+  document.getElementById('po-pd1').checked=false;document.getElementById('po-pd2').checked=false;
+  document.getElementById('po-success').style.display='none';
+  document.querySelector('#preorder-modal .mtitle').style.display='block';
+  document.querySelectorAll('#preorder-modal > .mbox > :not(#po-success)').forEach(el=>{
+    if(el.id!=='po-success')el.style.display='';
+  });
+  // sync pd labels
+  updatePDCheckboxes('po-');
+  document.getElementById('preorder-modal').classList.add('open');
+}
+
+function submitPreOrder(){
+  const fio=v('po-fio'),phone=v('po-phone'),email=v('po-email'),comment=v('po-comment');
+  let ok=true;
+  if(!validateFIO(fio)){setErr('po-fio','poe-fio',true);ok=false;}else setErr('po-fio','poe-fio',false);
+  if(!validatePhone(phone)){setErr('po-phone','poe-phone',true);ok=false;}else setErr('po-phone','poe-phone',false);
+  if(email&&!validateEmail(email)){setErr('po-email','poe-email',true);ok=false;}else setErr('po-email','poe-email',false);
+  const pd1=document.getElementById('po-pd1')?.checked;
+  const pd2=document.getElementById('po-pd2')?.checked;
+  const epd=document.getElementById('poe-pd');
+  if(!pd1||!pd2){if(epd)epd.style.display='block';ok=false;}else{if(epd)epd.style.display='none';}
+  if(!ok)return;
+
+  const items=_poItems.map(it=>({name:it.name,qty:it.qty,line:it.line,pw:it.pw,
+    inStockQty:it.inStockQty,preQty:it.preQty,prodId:it.prodId,flIdx:it.flIdx}));
+  const total=items.reduce((s,it)=>s+it.line,0);
+  const hasPreorder=items.some(it=>it.preQty>0);
+
+  finalizeOrder({fio,phone,email,comment},items,total,hasPreorder?'preorder':'order');
+
+  // hide form, show success
+  document.querySelectorAll('#preorder-modal .mbox > *:not(#po-success)').forEach(el=>el.style.display='none');
+  const suc=document.getElementById('po-success');
+  suc.style.display='block';
+  const subEl=document.getElementById('po-success-sub');
+  if(subEl)subEl.textContent=hasPreorder?
+    'Мы свяжемся с вами по предзаказу в ближайшее время':'Ваш заказ принят!';
+}
+
+function finalizeOrder(customer,items,total,type){
+  const order={
+    id:(type==='preorder'?'PRE-':'ORD-')+Date.now(),
+    date:new Date().toLocaleString('ru'),
+    status:'new',type,
+    customer,items,total,history:[]
+  };
   const orders=gO();orders.unshift(order);SS('orders',orders);updateBadge();
 
+  // Decrement stock for in-stock items only
+  items.forEach(it=>{
+    const st=getStock(it.prodId,it.flIdx);
+    if(st!==null){
+      const toDeduct=it.inStockQty!==undefined?it.inStockQty:it.qty;
+      setStock(it.prodId,it.flIdx,Math.max(0,st-toDeduct));
+    }
+  });
+  renderCalc();updCalc(); // refresh badges
+
   const c=gC();
-  let msg=`📦 ЗАКАЗ ${order.id}\n👤 ${fio}\n📞 ${phone}${email?'\n✉ '+email:''}\n\n`;
-  items.forEach(it=>msg+=`• ${it.name} ×${it.qty} = ${it.line.toLocaleString('ru')} ₽\n`);
-  msg+=`\nИТОГО: ${total.toLocaleString('ru')} ₽`;if(comment)msg+=`\n💬 ${comment}`;
+  const prefix=type==='preorder'?'🕐 ПРЕДЗАКАЗ':'📦 ЗАКАЗ';
+  let msg=`${prefix} ${order.id}\n👤 ${customer.fio}\n📞 ${customer.phone}${customer.email?'\n✉ '+customer.email:''}\n\n`;
+  items.forEach(it=>{
+    const mark=it.preQty>0&&it.inStockQty===0?'[ПРЕДЗАКАЗ] ':it.preQty>0?`[${it.inStockQty} в наличии + ${it.preQty} предзаказ] `:'';
+    msg+=`• ${mark}${it.name} ×${it.qty} = ${it.line.toLocaleString('ru')} ₽\n`;
+  });
+  msg+=`\nИТОГО: ${total.toLocaleString('ru')} ₽`;
+  if(customer.comment)msg+=`\n💬 ${customer.comment}`;
   if(c.tg){const h=c.tg.startsWith('http')?c.tg:`https://t.me/${c.tg.replace('@','')}`;window.open(h,'_blank');}
   else if(c.wa){window.open(`https://wa.me/${c.wa.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`,'_blank');}
 
-  document.getElementById('ostep1').style.display='none';
-  document.getElementById('ostep2').style.display='block';
-  clearAll();
+  if(type==='order'){
+    document.getElementById('ostep1').style.display='none';
+    document.getElementById('ostep2').style.display='block';
+    clearAll();
+  } else {
+    clearAll();
+  }
 }
 
 function setErr(inputId,errId,show){
@@ -1219,6 +1530,7 @@ function openAdmin(){
   try{renderPhotosEd();}catch(e){console.warn('renderPhotosEd',e);}
   try{renderColorGrid();}catch(e){console.warn('renderColorGrid',e);}
   try{renderDocsAdmin();}catch(e){console.warn('renderDocsAdmin',e);}
+  try{renderStockAdmin();}catch(e){console.warn('renderStockAdmin',e);}
   document.getElementById('admin-panel').classList.add('open');
 }
 function closeAdmin(){document.getElementById('admin-panel').classList.remove('open');}
@@ -1265,7 +1577,10 @@ function renderOrdersAdmin(){
     <div class="ocard">
       <div class="ocard-top">
         <div><div class="onum">${o.id}</div><div class="odate">${o.date}</div></div>
-        <div class="ostatus ${o.status}">${o.status==='done'?'Выполнен':'Новый'}</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          ${o.type==='preorder'?`<span class="preorder-badge">предзаказ</span>`:''}
+          <div class="ostatus ${o.status}">${o.status==='done'?'Выполнен':'Новый'}</div>
+        </div>
       </div>
       <div class="ocustomer"><strong>${o.customer.fio}</strong> · ${o.customer.phone}${o.customer.email?' · '+o.customer.email:''}</div>
       ${o.customer.comment?`<div class="ocomment">💬 ${o.customer.comment}</div>`:''}
