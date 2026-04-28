@@ -1049,6 +1049,10 @@ document.addEventListener('DOMContentLoaded',async()=>{
   const savedFont=LS('font','classic');
   if(savedFont!=='classic')applyFont(savedFont,null);
   applyTexts();renderProducts();renderCalc();renderContacts();updatePDCheckboxes('');updateBadge();renderDocsPublic();
+  // Auto-open admin login if ?admin=1 in URL
+  if(location.search.includes('admin=1')||location.hash.includes('admin')){
+    _showLoginModal();
+  }
 });
 
 /* ═══════ COLORS ═══════ */
@@ -1172,7 +1176,29 @@ function handlePDF(input,key){
 
 function showPDFPreview(key,name){
   const el=document.getElementById(key+'-preview');
-  if(el)el.innerHTML=`<div class="pdf-preview"><span style="font-size:18px">📄</span><a href="${LS(key+'_pdf','')}" target="_blank">${name||'Открыть документ'}</a></div>`;
+  if(el)el.innerHTML=`<div class="pdf-preview"><span style="font-size:18px">📄</span>
+    <a href="javascript:void(0)" onclick="openPDF('${key}')">${name||'Открыть документ'}</a></div>`;
+}
+
+// Open a base64 PDF via Blob URL (browsers block data: URLs in new tabs)
+function openPDF(key){
+  const dataUrl=LS(key+'_pdf','');
+  if(!dataUrl){alert('Файл не найден');return;}
+  try{
+    // Convert base64 data URL → binary → Blob → object URL
+    const base64=dataUrl.split(',')[1];
+    const binary=atob(base64);
+    const bytes=new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+    const blob=new Blob([bytes],{type:'application/pdf'});
+    const blobUrl=URL.createObjectURL(blob);
+    window.open(blobUrl,'_blank');
+    // Revoke after short delay to free memory
+    setTimeout(()=>URL.revokeObjectURL(blobUrl),10000);
+  }catch(e){
+    console.warn('Blob open failed, trying direct:',e);
+    window.open(dataUrl,'_blank');
+  }
 }
 
 function savePD(){
@@ -1568,11 +1594,17 @@ function setErr(inputId,errId,show){
 
 /* ═══════ ADMIN LOGIN ═══════ */
 function openAdminLogin(){
+  // Open admin in a new tab via ?admin param
+  const url=location.href.split('?')[0].split('#')[0]+'?admin=1';
+  window.open(url,'_blank');
+}
+
+function _showLoginModal(){
   document.getElementById('admin-login').classList.add('open');
   document.getElementById('lerr').style.display='none';
   document.getElementById('l-user').value='';
   document.getElementById('l-pwd').value='';
-  setTimeout(()=>document.getElementById('l-user').focus(),80);
+  setTimeout(()=>document.getElementById('l-user').focus(),200);
 }
 
 function doLogin(){
@@ -1614,8 +1646,8 @@ function fillAdminForms(){
   setValue('sp-login',gLogin());
   // show PDF previews if loaded
   const pdf1=LS('pd1_pdf','');const pdf2=LS('pd2_pdf','');
-  if(pdf1){document.getElementById('pd1-preview').innerHTML=`<div class="pdf-preview"><span style="font-size:18px">📄</span><a href="${pdf1}" target="_blank">Открыть документ 1</a></div>`;}
-  if(pdf2){document.getElementById('pd2-preview').innerHTML=`<div class="pdf-preview"><span style="font-size:18px">📄</span><a href="${pdf2}" target="_blank">Открыть документ 2</a></div>`;}
+  if(pdf1){document.getElementById('pd1-preview').innerHTML=`<div class="pdf-preview"><span style="font-size:18px">📄</span><a href="javascript:void(0)" onclick="openPDF('pd1')">Открыть документ 1</a></div>`;}
+  if(pdf2){document.getElementById('pd2-preview').innerHTML=`<div class="pdf-preview"><span style="font-size:18px">📄</span><a href="javascript:void(0)" onclick="openPDF('pd2')">Открыть документ 2</a></div>`;}
   // font
   const fn=LS('font','classic');
   document.querySelectorAll('.font-opt').forEach(b=>b.classList.remove('act'));
@@ -1833,7 +1865,40 @@ function renderPhotosEd(){
 }
 
 function prvPhoto(id,url){const el=document.getElementById('ap-'+id);if(el){el.src=url;el.style.opacity=1;}}
-function upPhoto(inp,id){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{setValue('au-'+id,e.target.result);prvPhoto(id,e.target.result);};r.readAsDataURL(f);}
+
+// Compress image via canvas before saving — keeps it under Firestore 1MB limit
+function compressImage(file, maxW, maxH, quality, callback){
+  const img=new Image();
+  const reader=new FileReader();
+  reader.onload=e=>{
+    img.onload=()=>{
+      let w=img.width, h=img.height;
+      if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}
+      if(h>maxH){w=Math.round(w*maxH/h);h=maxH;}
+      const canvas=document.createElement('canvas');
+      canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      callback(canvas.toDataURL('image/jpeg',quality));
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function upPhoto(inp,id){
+  const f=inp.files[0];if(!f)return;
+  // Show loading state
+  const prev=document.getElementById('ap-'+id);
+  if(prev)prev.style.opacity=.4;
+  const inp_field=document.getElementById('au-'+id);
+  if(inp_field)inp_field.value='⏳ Сжимаю изображение...';
+  // Compress: max 900px wide, 900px tall, JPEG 0.82 quality → typically 60–150KB
+  compressImage(f, 900, 900, 0.82, (dataUrl)=>{
+    setValue('au-'+id, dataUrl);
+    prvPhoto(id, dataUrl);
+    if(inp_field)inp_field.value='✓ Файл загружен (сохраните для применения)';
+  });
+}
 function jumpToPhoto(id){
   openAdminLogin();
   setTimeout(()=>{
@@ -1844,7 +1909,14 @@ function jumpToPhoto(id){
 
 function savePhotos(){
   const prods=gP(),imgs=gI();
-  prods.forEach(p=>{const url=v('au-'+p.id);if(url!==null)imgs[p.id]=url;const m=document.getElementById('img-'+p.id);if(m&&url)m.src=url;});
+  prods.forEach(p=>{
+    const raw=v('au-'+p.id);
+    // Skip placeholder text written during compression
+    if(raw===null||raw.startsWith('⏳')||raw.startsWith('✓ Файл'))return;
+    imgs[p.id]=raw;
+    const m=document.getElementById('img-'+p.id);
+    if(m&&raw)m.src=raw;
+  });
   SS('images',imgs);showMsg('am-photos');
 }
 
@@ -1887,12 +1959,32 @@ function deleteDoc(id){
   renderDocsAdmin();renderDocsPublic();
 }
 
+// Open a document URL — handles both regular https:// and base64 data: URLs
+function openDocURL(url){
+  if(!url)return;
+  if(url.startsWith('data:')){
+    try{
+      const mime=url.split(';')[0].split(':')[1]||'application/pdf';
+      const base64=url.split(',')[1];
+      const binary=atob(base64);
+      const bytes=new Uint8Array(binary.length);
+      for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+      const blob=new Blob([bytes],{type:mime});
+      const blobUrl=URL.createObjectURL(blob);
+      window.open(blobUrl,'_blank');
+      setTimeout(()=>URL.revokeObjectURL(blobUrl),10000);
+    }catch(e){window.open(url,'_blank');}
+  } else {
+    window.open(url,'_blank');
+  }
+}
+
 function renderDocsAdmin(){
   const docs=gDocs();
   const el=document.getElementById('docs-admin-list');
   if(!el)return;
   if(!docs.length){el.innerHTML='<p style="font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;padding:16px 0">Документов пока нет</p>';return;}
-  el.innerHTML=docs.map(d=>`
+  el.innerHTML=docs.map((d,idx)=>`
     <div class="doc-card">
       <div class="doc-icon">📄</div>
       <div class="doc-info">
@@ -1900,7 +1992,7 @@ function renderDocsAdmin(){
         ${d.desc?`<div class="doc-desc">${d.desc}</div>`:''}
       </div>
       <div class="doc-actions">
-        <a class="doc-open-btn" href="${d.url}" target="_blank">↗ Открыть</a>
+        <button class="doc-open-btn" onclick="openDocURL(${JSON.stringify(d.url)})">↗ Открыть</button>
         <button class="doc-del-btn" onclick="deleteDoc('${d.id}')">✕</button>
       </div>
     </div>`).join('');
@@ -1921,14 +2013,14 @@ function renderDocsPublic(){
   if(section)section.style.display='block';
   if(empty)empty.style.display='none';
   grid.innerHTML=docs.map(d=>`
-    <a class="doc-card" href="${d.url}" target="_blank" style="text-decoration:none;display:flex">
+    <div class="doc-card" onclick="openDocURL(${JSON.stringify(d.url)})" style="cursor:pointer">
       <div class="doc-icon">📄</div>
       <div class="doc-info">
         <div class="doc-name">${d.name}</div>
         ${d.desc?`<div class="doc-desc">${d.desc}</div>`:''}
         <div style="font-size:9px;color:var(--gold-dim);letter-spacing:2px;text-transform:uppercase;margin-top:6px">Открыть PDF ↗</div>
       </div>
-    </a>`).join('');
+    </div>`).join('');
 }
 
 /* ═══════ TEXTS/CONTACTS SAVE ═══════ */
