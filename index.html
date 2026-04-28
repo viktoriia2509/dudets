@@ -1202,12 +1202,23 @@ function updatePDCheckboxes(prefix){
   const l2=document.getElementById(prefix+'pd2-label');
   if(l1){
     l1.innerHTML=pd.t1||'Я согласен на обработку моих персональных данных';
-    if(pd.url1){l1.innerHTML+=` <a href="${pd.url1}" target="_blank">${pd.lt1||'— ознакомиться'}</a>`;}
+    if(pd.url1){
+      l1.innerHTML+=` <a href="javascript:void(0)" onclick="openPDUrl('pd1')" style="color:var(--gold);text-decoration:underline">${pd.lt1||'— ознакомиться'}</a>`;
+    }
   }
   if(l2){
     l2.innerHTML=pd.t2||'Я согласен с политикой обработки персональных данных';
-    if(pd.url2){l2.innerHTML+=` <a href="${pd.url2}" target="_blank">${pd.lt2||'— ознакомиться'}</a>`;}
+    if(pd.url2){
+      l2.innerHTML+=` <a href="javascript:void(0)" onclick="openPDUrl('pd2')" style="color:var(--gold);text-decoration:underline">${pd.lt2||'— ознакомиться'}</a>`;
+    }
   }
+}
+
+// Open personal data PDF (handles both data: base64 and https: URLs)
+function openPDUrl(key){
+  const pd=gPD();
+  const url=pd['url'+(key==='pd1'?'1':'2')];
+  if(url)openDocURL(url);
 }
 
 function handlePDF(input,key){
@@ -1810,21 +1821,56 @@ function updateEditTotal(){
 
 function saveEditedOrder(){
   const orders=gO();const o=orders.find(x=>x.id===editingOrderId);if(!o)return;
+
+  // Сохраняем снимок в историю ДО изменений
   if(!o.history)o.history=[];
-  o.history.push({savedAt:new Date().toLocaleString('ru'),customer:{...o.customer},items:JSON.parse(JSON.stringify(o.items)),total:o.total});
+  o.history.push({
+    savedAt:new Date().toLocaleString('ru'),
+    customer:{...o.customer},
+    items:JSON.parse(JSON.stringify(o.items)),
+    total:o.total
+  });
+
+  // Обновляем данные покупателя
   o.customer.fio=v('edit-fio')||o.customer.fio;
   o.customer.phone=v('edit-phone')||o.customer.phone;
   o.customer.email=v('edit-email')||'';
   o.customer.comment=v('edit-comment')||'';
+
+  // Обновляем позиции И синхронизируем склад
   let newTotal=0;
   o.items.forEach((it,i)=>{
-    const qty=parseInt(document.getElementById('eiq-'+i)?.value)||0;
-    const unitPrice=it.pw||Math.round((it.line||0)/Math.max(it.qty,1));
-    it.qty=qty;it.pw=unitPrice;it.line=qty*unitPrice;newTotal+=it.line;
+    const newQty=parseInt(document.getElementById('eiq-'+i)?.value)||0;
+    const oldQty=it.qty||0;
+    const unitPrice=it.pw||Math.round((it.line||0)/Math.max(oldQty,1));
+
+    // Корректируем склад: возвращаем старое кол-во, списываем новое
+    if(it.prodId!==undefined&&it.flIdx!==undefined){
+      const st=getStock(it.prodId,it.flIdx);
+      if(st!==null){
+        // diff > 0 → заказ уменьшился → возвращаем на склад
+        // diff < 0 → заказ увеличился → списываем со склада
+        const diff=oldQty-newQty;
+        setStock(it.prodId,it.flIdx,Math.max(0,st+diff));
+      }
+    }
+
+    it.qty=newQty;
+    it.pw=unitPrice;
+    it.line=newQty*unitPrice;
+    newTotal+=it.line;
   });
+
   o.items=o.items.filter(it=>it.qty>0);
   o.total=newTotal;
-  SS('orders',orders);renderOrdersAdmin();
+
+  SS('orders',orders);
+  renderOrdersAdmin();
+
+  // Обновляем таблицу калькулятора на сайте (бейджи остатков)
+  renderCalc();
+  updCalc();
+
   closeModal('edit-order-modal');
 }
 
@@ -2054,8 +2100,12 @@ function renderDocsAdmin(){
     </div>`).join('');
 }
 
+// Global cache for doc click access (avoids inline JSON/quote issues)
+let _docsClickCache = [];
+
 function renderDocsPublic(){
   const docs=gDocs();
+  _docsClickCache=docs;
   const grid=document.getElementById('docs-render');
   const empty=document.getElementById('docs-empty');
   const section=document.getElementById('docs');
@@ -2068,8 +2118,8 @@ function renderDocsPublic(){
   }
   if(section)section.style.display='block';
   if(empty)empty.style.display='none';
-  grid.innerHTML=docs.map(d=>`
-    <div class="doc-card" onclick="openDocURL(${JSON.stringify(d.url)})" style="cursor:pointer">
+  grid.innerHTML=docs.map((d,i)=>`
+    <div class="doc-card" onclick="openDocByIdx(${i})" style="cursor:pointer">
       <div class="doc-icon">📄</div>
       <div class="doc-info">
         <div class="doc-name">${d.name}</div>
@@ -2077,6 +2127,11 @@ function renderDocsPublic(){
         <div style="font-size:9px;color:var(--gold-dim);letter-spacing:2px;text-transform:uppercase;margin-top:6px">Открыть PDF ↗</div>
       </div>
     </div>`).join('');
+}
+
+function openDocByIdx(i){
+  const d=_docsClickCache[i];
+  if(d&&d.url)openDocURL(d.url);
 }
 
 /* ═══════ TEXTS/CONTACTS SAVE ═══════ */
