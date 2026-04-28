@@ -6,6 +6,9 @@
 <title id="site-title-tag">JOYSTICK — Premium Disposable</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link id="gfont" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <style id="custom-colors"></style>
 <style>
 :root{--black:#0a0a0a;--deep:#111;--panel:#161616;--border:#2a2a2a;
@@ -378,6 +381,13 @@ input[type=color].cpicker{position:absolute;inset:0;width:100%;height:100%;opaci
 </style>
 </head>
 <body>
+<!-- FIREBASE LOADER -->
+<div id="fb-loader" style="display:none;position:fixed;inset:0;z-index:9998;background:#0a0a0a;align-items:center;justify-content:center;flex-direction:column;gap:16px">
+  <div style="width:40px;height:40px;border:2px solid #2a2a2a;border-top-color:#c9a84c;border-radius:50%;animation:spin .8s linear infinite"></div>
+  <div style="font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#6e6860">Загрузка...</div>
+</div>
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
 <!-- NAV -->
 <nav>
   <a class="nav-logo" href="#" id="nav-logo-text">Joystick</a>
@@ -965,9 +975,57 @@ const THEMES={
   blue:{black:'#060810',deep:'#0a0e1a',panel:'#101626',border:'#1e2840',gold:'#4c84c9',goldDim:'#2a5a8a',cream:'#e8f0f8',text:'#c0ccd8',muted:'#607080'}
 };
 
+/* ═══════ FIREBASE INIT ═══════ */
+const FB_CFG={
+  apiKey:"AIzaSyBsPC1Vpc_Xe9pUmZIlkg0I8Xj0k1BRn44",
+  authDomain:"dedets-9cc2b.firebaseapp.com",
+  projectId:"dedets-9cc2b",
+  storageBucket:"dedets-9cc2b.firebasestorage.app",
+  messagingSenderId:"404228188068",
+  appId:"1:404228188068:web:fb106564daa5be93210331"
+};
+firebase.initializeApp(FB_CFG);
+const db=firebase.firestore();
+
 /* ═══════ STORAGE ═══════ */
-const LS=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}};
-const SS=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+// In-memory cache — replaces localStorage for shared data
+const _C={};
+
+// Keys with potentially large base64 data — keep local only
+const _LOCAL=['pd1_pdf','pd2_pdf'];
+
+function _isHuge(v){try{return JSON.stringify(v).length>400000}catch{return false}}
+
+// Read from cache (loaded from Firestore on startup)
+const LS=(k,d)=>{
+  if(_C[k]!==undefined)return _C[k];
+  try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}
+};
+
+// Write to cache + Firestore (or localStorage for large/local-only)
+const SS=(k,v)=>{
+  _C[k]=v;
+  const huge=_isHuge(v);
+  const localOnly=_LOCAL.includes(k);
+  try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}
+  if(!localOnly&&!huge){
+    db.collection('settings').doc(k).set({v}).catch(e=>console.warn('FB write err:',e));
+  }
+};
+
+async function _loadFirestore(){
+  try{
+    const snap=await db.collection('settings').get();
+    snap.forEach(doc=>{_C[doc.id]=doc.data().v;});
+    console.log('Firebase: загружено',snap.size,'ключей');
+  }catch(e){
+    console.warn('Firebase недоступен, используем localStorage',e);
+    ['products','texts','contacts','colors','font','pd_config','a_login','a_pwd','orders','stock','site_docs'].forEach(k=>{
+      try{const v=localStorage.getItem(k);if(v)_C[k]=JSON.parse(v);}catch{}
+    });
+  }
+}
+
 const gP=()=>LS('products',DEF_PRODUCTS);
 const gI=()=>LS('images',DEF_IMGS);
 const gT=()=>LS('texts',DEF_TXT);
@@ -982,7 +1040,11 @@ const gLogin=()=>LS('a_login',DEF_LOGIN);
 const gPwd=()=>LS('a_pwd',DEF_PWD);
 
 /* ═══════ INIT ═══════ */
-document.addEventListener('DOMContentLoaded',()=>{
+document.addEventListener('DOMContentLoaded',async()=>{
+  const loader=document.getElementById('fb-loader');
+  if(loader)loader.style.display='flex';
+  await _loadFirestore();
+  if(loader)loader.style.display='none';
   applyColors();
   const savedFont=LS('font','classic');
   if(savedFont!=='classic')applyFont(savedFont,null);
@@ -1889,6 +1951,12 @@ function saveSettings(){
 function resetAll(){
   if(!confirm('Удалить ВСЕ данные?'))return;
   if(!confirm('Действие нельзя отменить. Продолжить?'))return;
+  // Очищаем Firestore
+  db.collection('settings').get().then(snap=>{
+    const batch=db.batch();
+    snap.docs.forEach(doc=>batch.delete(doc.ref));
+    return batch.commit();
+  }).catch(e=>console.warn('FB clear:',e));
   localStorage.clear();location.reload();
 }
 
