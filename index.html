@@ -6,9 +6,7 @@
 <title id="site-title-tag">JOYSTICK — Premium Disposable</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link id="gfont" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<!-- Firebase SDK removed — using REST API directly (no external scripts) -->
 <style id="custom-colors"></style>
 <style>
 :root{--black:#0a0a0a;--deep:#111;--panel:#161616;--border:#2a2a2a;
@@ -667,7 +665,9 @@ input[type=color].cpicker{position:absolute;inset:0;width:100%;height:100%;opaci
 <!-- ADMIN PANEL -->
 <div id="admin-panel">
   <div class="aside">
-    <div class="aside-logo">ADMIN</div>
+    <div class="aside-logo">ADMIN
+      <div id="fb-status" style="font-size:8px;letter-spacing:1px;margin-top:4px;font-family:'Montserrat',sans-serif;font-weight:400"></div>
+    </div>
     <button class="anav act" onclick="showTab('t-orders',this)">Заказы<span class="badge" id="nbadge" style="display:none">0</span></button>
     <button class="anav" onclick="showTab('t-stock',this)">Склад</button>
     <button class="anav" onclick="showTab('t-products',this)">Товары и вкусы</button>
@@ -975,54 +975,104 @@ const THEMES={
   blue:{black:'#060810',deep:'#0a0e1a',panel:'#101626',border:'#1e2840',gold:'#4c84c9',goldDim:'#2a5a8a',cream:'#e8f0f8',text:'#c0ccd8',muted:'#607080'}
 };
 
-/* ═══════ FIREBASE INIT ═══════ */
-const FB_CFG={
-  apiKey:"AIzaSyBsPC1Vpc_Xe9pUmZIlkg0I8Xj0k1BRn44",
-  authDomain:"dedets-9cc2b.firebaseapp.com",
-  projectId:"dedets-9cc2b",
-  storageBucket:"dedets-9cc2b.firebasestorage.app",
-  messagingSenderId:"404228188068",
-  appId:"1:404228188068:web:fb106564daa5be93210331"
-};
-firebase.initializeApp(FB_CFG);
-const db=firebase.firestore();
+/* ═══════════════════════════════════════════════════════════
+   FIREBASE REST API — без внешних скриптов, только fetch()
+   Работает пока есть доступ к интернету.
+   Fallback: localStorage если сеть недоступна.
+═══════════════════════════════════════════════════════════ */
+const _PROJECT = 'dedets-9cc2b';
+const _FB_BASE = `https://firestore.googleapis.com/v1/projects/${_PROJECT}/databases/(default)/documents/settings`;
+let _fbOk = false;
+
+/* ── Конвертация JS ↔ Firestore field types ── */
+function _toFV(val){
+  if(val===null||val===undefined)return{nullValue:null};
+  if(typeof val==='boolean')return{booleanValue:val};
+  if(typeof val==='number')return Number.isInteger(val)?{integerValue:''+val}:{doubleValue:val};
+  if(typeof val==='string')return{stringValue:val};
+  if(Array.isArray(val))return{arrayValue:{values:val.length?val.map(_toFV):[]}};
+  if(typeof val==='object')return{mapValue:{fields:Object.fromEntries(Object.entries(val).map(([k,v])=>[k,_toFV(v)]))}};
+  return{stringValue:''+val};
+}
+function _fromFV(fv){
+  if(!fv)return null;
+  if('nullValue' in fv)return null;
+  if('booleanValue' in fv)return fv.booleanValue;
+  if('integerValue' in fv)return parseInt(fv.integerValue);
+  if('doubleValue' in fv)return fv.doubleValue;
+  if('stringValue' in fv)return fv.stringValue;
+  if('arrayValue' in fv)return(fv.arrayValue.values||[]).map(_fromFV);
+  if('mapValue' in fv)return Object.fromEntries(Object.entries(fv.mapValue.fields||{}).map(([k,v])=>[k,_fromFV(v)]));
+  return null;
+}
+
+/* ── Запись одного ключа в Firestore ── */
+async function _fbWrite(key,val){
+  if(!_fbOk)return;
+  try{
+    await fetch(`${_FB_BASE}/${encodeURIComponent(key)}?updateMask.fieldPaths=v`,{
+      method:'PATCH',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({fields:{v:_toFV(val)}})
+    });
+  }catch(e){console.warn('FB write failed:',key,e);}
+}
 
 /* ═══════ STORAGE ═══════ */
-// In-memory cache — replaces localStorage for shared data
-const _C={};
+const _C = {};
+const _LOCAL = ['pd1_pdf','pd2_pdf'];
+function _isHuge(v){try{return JSON.stringify(v).length>450000}catch{return false}}
 
-// Keys with potentially large base64 data — keep local only
-const _LOCAL=['pd1_pdf','pd2_pdf'];
-
-function _isHuge(v){try{return JSON.stringify(v).length>400000}catch{return false}}
-
-// Read from cache (loaded from Firestore on startup)
+/* Читаем из кеша (или localStorage как запасной вариант) */
 const LS=(k,d)=>{
   if(_C[k]!==undefined)return _C[k];
   try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}
 };
 
-// Write to cache + Firestore (or localStorage for large/local-only)
+/* Пишем в кеш + localStorage + Firestore */
 const SS=(k,v)=>{
   _C[k]=v;
-  const huge=_isHuge(v);
-  const localOnly=_LOCAL.includes(k);
   try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}
-  if(!localOnly&&!huge){
-    db.collection('settings').doc(k).set({v}).catch(e=>console.warn('FB write err:',e));
+  if(!_LOCAL.includes(k)&&!_isHuge(v)){
+    _fbWrite(k,v); // async, не ждём
   }
 };
 
+/* Загрузка всех настроек при старте */
 async function _loadFirestore(){
+  // Сначала грузим localStorage как базовый слой
+  const KEYS=['products','images','texts','contacts','colors','font','pd_config',
+    'a_login','a_pwd','orders','stock','site_docs'];
+  KEYS.forEach(k=>{
+    try{const v=localStorage.getItem(k);if(v!==null)_C[k]=JSON.parse(v);}catch{}
+  });
+
+  // Пробуем загрузить из Firestore REST API
   try{
-    const snap=await db.collection('settings').get();
-    snap.forEach(doc=>{_C[doc.id]=doc.data().v;});
-    console.log('Firebase: загружено',snap.size,'ключей');
-  }catch(e){
-    console.warn('Firebase недоступен, используем localStorage',e);
-    ['products','texts','contacts','colors','font','pd_config','a_login','a_pwd','orders','stock','site_docs'].forEach(k=>{
-      try{const v=localStorage.getItem(k);if(v)_C[k]=JSON.parse(v);}catch{}
+    let url=`${_FB_BASE}?pageSize=200`;
+    let allDocs=[];
+    // Обрабатываем пагинацию на случай большого числа ключей
+    while(url){
+      const res=await fetch(url);
+      if(!res.ok)throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      const data=await res.json();
+      if(data.documents)allDocs=allDocs.concat(data.documents);
+      url=data.nextPageToken?`${_FB_BASE}?pageSize=200&pageToken=${data.nextPageToken}`:null;
+    }
+    allDocs.forEach(doc=>{
+      const key=decodeURIComponent(doc.name.split('/').pop());
+      if(doc.fields&&doc.fields.v!==undefined){
+        const val=_fromFV(doc.fields.v);
+        _C[key]=val;
+        // Синхронизируем в localStorage
+        try{localStorage.setItem(key,JSON.stringify(val));}catch{}
+      }
     });
+    _fbOk=true;
+    console.log(`✅ Firebase REST: загружено ${allDocs.length} ключей`);
+  }catch(e){
+    console.warn('⚠️ Firebase REST недоступен, работаем с localStorage. Ошибка:',e.message);
+    _fbOk=false;
   }
 }
 
@@ -1617,7 +1667,13 @@ function doLogin(){
 
 /* ═══════ ADMIN ═══════ */
 function openAdmin(){
-  EP=null; // reset edit cache
+  EP=null;
+  // Show Firebase connection status
+  const fbStatus=document.getElementById('fb-status');
+  if(fbStatus){
+    fbStatus.textContent=_fbOk?'🟢 Firebase: онлайн':'🔴 Только localStorage';
+    fbStatus.style.color=_fbOk?'#27ae60':'#f39c12';
+  }
   try{fillAdminForms();}catch(e){console.warn('fillAdminForms',e);}
   try{renderOrdersAdmin();}catch(e){console.warn('renderOrdersAdmin',e);}
   try{renderPED_tab();}catch(e){console.warn('renderPED_tab',e);}
@@ -2043,13 +2099,16 @@ function saveSettings(){
 function resetAll(){
   if(!confirm('Удалить ВСЕ данные?'))return;
   if(!confirm('Действие нельзя отменить. Продолжить?'))return;
-  // Очищаем Firestore
-  db.collection('settings').get().then(snap=>{
-    const batch=db.batch();
-    snap.docs.forEach(doc=>batch.delete(doc.ref));
-    return batch.commit();
-  }).catch(e=>console.warn('FB clear:',e));
-  localStorage.clear();location.reload();
+  // Удаляем все ключи из Firestore через REST (не критично если не получится)
+  const KEYS=['products','images','texts','contacts','colors','font','pd_config',
+    'a_login','a_pwd','orders','stock','site_docs'];
+  if(_fbOk){
+    KEYS.forEach(k=>{
+      fetch(`${_FB_BASE}/${encodeURIComponent(k)}`,{method:'DELETE'}).catch(()=>{});
+    });
+  }
+  localStorage.clear();
+  location.reload();
 }
 
 /* ═══════ UTILS ═══════ */
