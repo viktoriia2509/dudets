@@ -3,442 +3,141 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="site-title-tag">JOYSTICK</title>
+<title id="site-title-tag">JOYSTICK — Premium Disposable</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link id="gfont" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 <!-- Firebase SDK removed — using REST API directly (no external scripts) -->
+<style id="custom-colors"></style>
 <style>
-/* ═══ CSS VARIABLES ═══ */
-:root{
-  --black:#0a0a0a;--deep:#111;--panel:#161616;--border:#2a2a2a;
+:root{--black:#0a0a0a;--deep:#111;--panel:#161616;--border:#2a2a2a;
   --gold:#c9a84c;--gold-dim:#8a6f30;--cream:#f5f0e8;--text:#d4cfc6;--muted:#6e6860;
-  --red:#c0392b;--green:#27ae60;--purple:#9b59b6;
-  --ff-display:'Cormorant Garamond',serif;--ff-body:'Montserrat',sans-serif;
-}
+  --red:#c0392b;--green:#27ae60;--ff-display:'Cormorant Garamond',serif;--ff-body:'Montserrat',sans-serif;}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{background:var(--black);color:var(--text);font-family:var(--ff-body);font-weight:300;overflow-x:hidden}
-
-/* ═══ TOP NOTICE BAR ═══ */
-.top-notice{
-  background:rgba(201,168,76,.08);border-bottom:1px solid rgba(201,168,76,.15);
-  text-align:center;padding:8px 24px;
-  font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-dim);
-}
-
-/* ═══ NAVIGATION ═══ */
-.nav{
-  position:sticky;top:0;z-index:200;
-  background:rgba(10,10,10,.96);backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:0;
-  padding:0 40px;height:64px;
-}
-.nav-logo{
-  font-family:var(--ff-display);font-size:22px;font-weight:500;
-  letter-spacing:5px;color:var(--gold);text-decoration:none;text-transform:uppercase;
-  margin-right:40px;white-space:nowrap;
-}
-.nav-links{
-  display:flex;align-items:center;gap:0;flex:1;
-  list-style:none;
-}
-.nav-links a{
-  display:flex;align-items:center;height:64px;
-  padding:0 20px;color:var(--muted);text-decoration:none;
-  font-size:10px;letter-spacing:3px;text-transform:uppercase;
-  border-bottom:2px solid transparent;transition:all .25s;white-space:nowrap;
-}
-.nav-links a:hover{color:var(--cream);border-bottom-color:var(--border)}
-.nav-links a.active{color:var(--gold);border-bottom-color:var(--gold)}
-.nav-right{
-  display:flex;align-items:center;gap:16px;margin-left:auto;
-}
-.nav-contact-item{
-  display:flex;align-items:center;gap:6px;
-  color:var(--muted);text-decoration:none;font-size:11px;
-  letter-spacing:1px;transition:color .2s;white-space:nowrap;
-}
-.nav-contact-item:hover{color:var(--gold)}
-.nav-contact-item svg{width:14px;height:14px;fill:currentColor;flex-shrink:0}
-.cart-btn{
-  position:relative;display:flex;align-items:center;gap:8px;
-  background:var(--gold);border:none;color:var(--black);
-  padding:10px 20px;font-family:var(--ff-body);font-size:10px;
-  letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:opacity .2s;
-  white-space:nowrap;
-}
-.cart-btn:hover{opacity:.88}
-.cart-count{
-  display:inline-flex;align-items:center;justify-content:center;
-  background:var(--black);color:var(--gold);
-  width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:600;
-  display:none;
-}
-.cart-count.show{display:inline-flex}
-.nav-vdiv{width:1px;height:24px;background:var(--border);margin:0 4px}
-
-/* ═══ PAGES ═══ */
-.page{display:none}
-.page.active{display:block}
-
-/* ═══ HOME PAGE ═══ */
-.home-hero{
-  min-height:calc(100vh - 64px - 36px);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:80px 40px;position:relative;overflow:hidden;
-}
-.home-hero::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 70% 50% at 50% 60%,rgba(201,168,76,.07) 0%,transparent 65%);
-}
-.home-hero-eyebrow{
-  font-size:9px;letter-spacing:6px;text-transform:uppercase;color:var(--gold-dim);
-  margin-bottom:28px;opacity:.7;
-}
-.home-hero-title{
-  font-family:var(--ff-display);
-  font-size:clamp(56px,10vw,130px);font-weight:300;
-  line-height:.9;letter-spacing:-2px;color:var(--cream);
-  margin-bottom:0;
-}
-.home-hero-title em{font-style:italic;color:var(--gold)}
-.home-divider{
-  width:1px;height:60px;background:linear-gradient(to bottom,transparent,var(--gold-dim),transparent);
-  margin:36px auto;
-}
-.home-promo-text{
-  max-width:640px;margin:0 auto;
-  font-size:14px;line-height:2;letter-spacing:.5px;color:var(--text);
-}
-.home-promo-title{
-  font-family:var(--ff-display);font-size:clamp(22px,3vw,32px);
-  color:var(--cream);margin-bottom:16px;font-weight:300;
-}
-.home-cta-row{
-  display:flex;gap:16px;justify-content:center;margin-top:48px;flex-wrap:wrap;
-}
-.btn-gold{
-  background:var(--gold);border:none;color:var(--black);
-  padding:16px 44px;font-family:var(--ff-body);font-size:10px;
-  letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:opacity .2s;font-weight:500;
-}
-.btn-gold:hover{opacity:.85}
-.btn-outline{
-  background:transparent;border:1px solid var(--border);color:var(--text);
-  padding:16px 44px;font-family:var(--ff-body);font-size:10px;
-  letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:all .2s;
-}
-.btn-outline:hover{border-color:var(--gold-dim);color:var(--gold)}
-
-/* ═══ COLLECTION PAGE ═══ */
-.collection-header{
-  padding:48px 40px 32px;border-bottom:1px solid var(--border);
-  display:flex;align-items:baseline;gap:24px;flex-wrap:wrap;
-}
-.collection-title{
-  font-family:var(--ff-display);font-size:clamp(32px,5vw,56px);
-  font-weight:300;color:var(--cream);
-}
-.collection-subtitle{
-  font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);
-}
-.collection-body{padding:0 40px 80px}
-
-/* Product group */
-.prod-group{margin-top:48px}
-.prod-group-header{
-  display:flex;align-items:center;gap:20px;padding-bottom:20px;
-  border-bottom:1px solid var(--border);margin-bottom:28px;
-}
-.prod-group-img{
-  width:60px;height:80px;object-fit:cover;
-  border:1px solid var(--border);flex-shrink:0;background:#111;
-}
-.prod-group-info{flex:1}
-.prod-group-name{
-  font-family:var(--ff-display);font-size:clamp(18px,2.5vw,28px);
-  color:var(--gold);font-weight:500;letter-spacing:.5px;margin-bottom:4px;
-}
-.prod-group-sub{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-.prod-group-specs{display:flex;flex-wrap:wrap;gap:6px}
-.spec-chip{padding:3px 10px;border:1px solid var(--border);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
-.prod-group-price{text-align:right;flex-shrink:0}
-.prod-price-label{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
-.prod-price-val{font-family:var(--ff-display);font-size:28px;color:var(--cream);line-height:1}
-.prod-price-retail{font-size:11px;color:var(--gold-dim);margin-top:3px}
-
-/* Flavor cards grid */
-.flavors-cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-  gap:1px;background:var(--border);
-}
-.flavor-card{
-  background:var(--panel);padding:18px 20px;
-  display:flex;flex-direction:column;gap:6px;
-  position:relative;transition:background .2s;
-}
-.flavor-card:hover{background:#1c1c1c}
-.flavor-card-num{font-size:8px;color:var(--gold-dim);letter-spacing:2px}
-.flavor-card-en{font-family:var(--ff-display);font-size:15px;color:var(--cream);line-height:1.3}
-.flavor-card-ru{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
-.flavor-card-stock{margin-top:4px}
-/* stock badges */
-.sb{display:inline-flex;align-items:center;padding:2px 8px;font-size:8px;letter-spacing:2px;text-transform:uppercase;border:1px solid;white-space:nowrap}
-.sb-ok{color:var(--green);border-color:var(--green);background:rgba(39,174,96,.08)}
-.sb-low{color:#f39c12;border-color:#f39c12;background:rgba(243,156,18,.08)}
-.sb-pre{color:var(--purple);border-color:var(--purple);background:rgba(155,89,182,.08)}
-.sb-unlim{color:var(--muted);border-color:var(--border)}
-/* cart controls on card */
-.flavor-card-actions{margin-top:10px;display:flex;align-items:center;gap:8px}
-.qty-ctrl{display:flex;align-items:center;gap:0;border:1px solid var(--border)}
-.qty-ctrl button{
-  background:none;border:none;color:var(--muted);width:28px;height:28px;
-  font-size:16px;cursor:pointer;transition:all .2s;line-height:1;
-}
-.qty-ctrl button:hover{background:rgba(201,168,76,.1);color:var(--gold)}
-.qty-ctrl span{
-  width:32px;text-align:center;font-size:12px;color:var(--cream);
-  border-left:1px solid var(--border);border-right:1px solid var(--border);
-  line-height:28px;display:block;font-family:var(--ff-display);font-size:15px;
-}
-.add-first-btn{
-  background:none;border:1px solid var(--border);color:var(--muted);
-  padding:5px 14px;font-size:9px;letter-spacing:2px;text-transform:uppercase;
-  cursor:pointer;transition:all .2s;font-family:var(--ff-body);
-}
-.add-first-btn:hover{border-color:var(--gold-dim);color:var(--gold)}
-.flavor-detail-btn{
-  background:none;border:none;color:var(--gold-dim);font-size:11px;
-  cursor:pointer;transition:color .2s;padding:0;font-family:var(--ff-body);
-  letter-spacing:1px;
-}
-.flavor-detail-btn:hover{color:var(--gold)}
-
-/* ═══ CART OVERLAY ═══ */
-.cart-overlay{
-  display:none;position:fixed;inset:0;z-index:800;
-}
-.cart-overlay.open{display:block}
-.cart-backdrop{
-  position:absolute;inset:0;background:rgba(0,0,0,.7);
-}
-.cart-panel{
-  position:absolute;top:0;right:0;bottom:0;width:min(520px,100vw);
-  background:var(--deep);border-left:1px solid var(--border);
-  display:flex;flex-direction:column;overflow:hidden;
-}
-.cart-head{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:24px 28px;border-bottom:1px solid var(--border);flex-shrink:0;
-}
-.cart-head-title{font-family:var(--ff-display);font-size:24px;color:var(--cream);letter-spacing:1px}
-.cart-head-close{
-  background:none;border:1px solid var(--border);color:var(--muted);
-  width:36px;height:36px;cursor:pointer;font-size:16px;transition:all .2s;
-}
-.cart-head-close:hover{border-color:var(--muted);color:var(--text)}
-.cart-items{flex:1;overflow-y:auto;padding:16px 28px}
-.cart-empty{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  height:100%;text-align:center;color:var(--muted);gap:12px;
-}
-.cart-empty-icon{font-size:48px;opacity:.3}
-.cart-empty-text{font-size:10px;letter-spacing:3px;text-transform:uppercase}
-.cart-item{
-  display:flex;align-items:center;gap:12px;padding:14px 0;
-  border-bottom:1px solid rgba(42,42,42,.6);
-}
-.cart-item-info{flex:1;min-width:0}
-.cart-item-en{font-family:var(--ff-display);font-size:15px;color:var(--cream);line-height:1.2;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cart-item-ru{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cart-item-prod{font-size:9px;color:var(--gold-dim);letter-spacing:1px}
-.cart-item-qty{display:flex;align-items:center;gap:0;border:1px solid var(--border);flex-shrink:0}
-.cart-item-qty button{
-  background:none;border:none;color:var(--muted);width:30px;height:30px;
-  font-size:16px;cursor:pointer;transition:all .2s;
-}
-.cart-item-qty button:hover{background:rgba(201,168,76,.1);color:var(--gold)}
-.cart-item-qty span{
-  min-width:28px;text-align:center;font-size:13px;color:var(--cream);font-family:var(--ff-display);
-  border-left:1px solid var(--border);border-right:1px solid var(--border);line-height:30px;
-}
-.cart-item-price{
-  font-family:var(--ff-display);font-size:17px;color:var(--gold);
-  white-space:nowrap;flex-shrink:0;min-width:80px;text-align:right;
-}
-.cart-item-remove{
-  background:none;border:none;color:var(--muted);cursor:pointer;
-  font-size:16px;transition:color .2s;padding:4px;flex-shrink:0;
-}
-.cart-item-remove:hover{color:var(--red)}
-/* Preorder note in cart */
-.cart-item-pre{
-  font-size:8px;letter-spacing:2px;text-transform:uppercase;
-  color:var(--purple);border:1px solid var(--purple);padding:1px 6px;
-  display:inline-block;margin-top:3px;
-}
-.cart-footer{
-  padding:20px 28px;border-top:1px solid var(--border);flex-shrink:0;
-  background:var(--panel);
-}
-.cart-total-row{
-  display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;
-}
-.cart-total-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
-.cart-total-val{font-family:var(--ff-display);font-size:28px;color:var(--cream)}
-.cart-pre-notice{
-  font-size:9px;color:var(--purple);letter-spacing:1px;line-height:1.7;
-  padding:8px 12px;border:1px solid rgba(155,89,182,.3);
-  background:rgba(155,89,182,.06);margin-bottom:14px;display:none;
-}
-.cart-checkout-btn{
-  width:100%;background:var(--gold);border:none;color:var(--black);
-  padding:16px;font-family:var(--ff-body);font-size:11px;letter-spacing:4px;
-  text-transform:uppercase;cursor:pointer;transition:opacity .2s;font-weight:500;
-}
-.cart-checkout-btn:hover{opacity:.88}
-.cart-clear-btn{
-  width:100%;background:none;border:1px solid var(--border);color:var(--muted);
-  padding:10px;font-family:var(--ff-body);font-size:9px;letter-spacing:2px;
-  text-transform:uppercase;cursor:pointer;transition:all .2s;margin-top:8px;
-}
-.cart-clear-btn:hover{border-color:var(--muted);color:var(--text)}
-
-/* ═══ CHECKOUT OVERLAY ═══ */
-.checkout-overlay{
-  display:none;position:fixed;inset:0;z-index:900;
-  background:rgba(0,0,0,.9);align-items:center;justify-content:center;
-  padding:20px;overflow-y:auto;
-}
-.checkout-overlay.open{display:flex}
-.checkout-box{
-  background:var(--panel);border:1px solid var(--border);
-  max-width:660px;width:100%;padding:52px;margin:auto;
-}
-.checkout-title{font-family:var(--ff-display);font-size:32px;color:var(--cream);margin-bottom:6px}
-.checkout-sub{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:28px}
-.checkout-items-summary{
-  background:var(--black);padding:16px;margin-bottom:24px;
-  max-height:200px;overflow-y:auto;
-}
-.checkout-item-line{
-  display:flex;justify-content:space-between;padding:7px 0;
-  border-bottom:1px solid rgba(42,42,42,.5);font-size:12px;color:var(--text);
-}
-.checkout-item-line:last-child{border-bottom:none}
-.checkout-item-line span:last-child{font-family:var(--ff-display);font-size:16px;color:var(--gold)}
-.checkout-item-pre-label{font-size:8px;color:var(--purple);border:1px solid var(--purple);padding:0 5px;margin-left:6px}
-.checkout-total{
-  display:flex;justify-content:space-between;align-items:baseline;
-  padding:14px 0;border-top:1px solid var(--gold-dim);margin-bottom:24px;
-}
-.checkout-total span:first-child{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
-.checkout-total span:last-child{font-family:var(--ff-display);font-size:28px;color:var(--gold)}
-/* form */
-.co-sep{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-dim);padding-bottom:8px;border-bottom:1px solid var(--border);margin:20px 0 14px}
-.co-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px}
-.co-full{grid-column:1/-1}
-.co-group{display:flex;flex-direction:column;gap:4px}
-.co-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
-.co-input{
-  background:var(--black);border:1px solid var(--border);color:var(--cream);
-  padding:11px 14px;font-family:var(--ff-body);font-size:12px;outline:none;
-  transition:border-color .2s;width:100%;
-}
-.co-input:focus{border-color:var(--gold-dim)}
-.co-input.error{border-color:var(--red)}
-textarea.co-input{resize:vertical;min-height:68px}
-.co-req{color:var(--gold)}
-.co-err{font-size:10px;color:var(--red);display:none;margin-top:2px}
-/* pd checks in checkout */
-.pd-block{padding:14px 16px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);margin:16px 0}
-.pd-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:11px;color:var(--text);line-height:1.6}
-.pd-row:last-child{margin-bottom:0}
-.pd-row input[type=checkbox]{width:16px;height:16px;flex-shrink:0;margin-top:2px;cursor:pointer;accent-color:var(--gold)}
-.pd-row a{color:var(--gold);text-decoration:underline}
-.checkout-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
-.co-submit{
-  background:var(--gold);border:1px solid var(--gold);color:var(--black);
-  padding:14px 36px;font-family:var(--ff-body);font-size:10px;letter-spacing:3px;
-  text-transform:uppercase;cursor:pointer;transition:opacity .2s;
-}
-.co-submit:hover{opacity:.85}
-.co-cancel{
-  background:transparent;border:1px solid var(--border);color:var(--muted);
-  padding:14px 24px;font-family:var(--ff-body);font-size:10px;letter-spacing:2px;
-  text-transform:uppercase;cursor:pointer;transition:all .2s;
-}
-.co-cancel:hover{border-color:var(--muted);color:var(--text)}
-/* success */
-.co-success{display:none;text-align:center;padding:20px 0}
-.co-success-icon{font-size:52px;color:var(--green);margin-bottom:14px}
-.co-success-title{font-family:var(--ff-display);font-size:34px;color:var(--cream);margin-bottom:8px}
-.co-success-sub{font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:28px;line-height:1.8}
-
-/* ═══ DOCUMENTS PAGE ═══ */
-.docs-page{padding:48px 40px 80px}
-.page-title{
-  font-family:var(--ff-display);font-size:clamp(32px,5vw,56px);
-  font-weight:300;color:var(--cream);margin-bottom:8px;
-}
-.page-sub{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:48px}
-.docs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--border)}
-.doc-card{
-  background:var(--panel);padding:24px;display:flex;align-items:center;
-  gap:16px;cursor:pointer;transition:background .2s;
-}
-.doc-card:hover{background:#1c1c1c}
-.doc-icon{font-size:28px;flex-shrink:0}
-.doc-info{flex:1;min-width:0}
-.doc-name{font-family:var(--ff-display);font-size:17px;color:var(--cream);margin-bottom:3px}
-.doc-desc{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
-.doc-open{font-size:9px;color:var(--gold-dim);letter-spacing:2px;text-transform:uppercase;margin-top:6px}
-.doc-open-btn{
-  background:none;border:1px solid var(--gold-dim);color:var(--gold);
-  padding:7px 16px;font-size:9px;letter-spacing:2px;text-transform:uppercase;
-  cursor:pointer;transition:all .2s;font-family:var(--ff-body);flex-shrink:0;
-}
-.doc-open-btn:hover{background:var(--gold);color:var(--black)}
-.docs-empty-msg{
-  padding:60px 0;text-align:center;color:var(--muted);
-  font-size:11px;letter-spacing:3px;text-transform:uppercase;
-}
-
-/* ═══ CONTACTS PAGE ═══ */
-.contacts-page{padding:80px 40px;text-align:center}
-.contacts-grid{
-  display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-top:48px;
-}
-.contact-card{
-  display:flex;flex-direction:column;align-items:center;gap:10px;
-  padding:32px 40px;border:1px solid var(--border);
-  text-decoration:none;color:var(--text);transition:all .3s;min-width:180px;
-}
-.contact-card:hover{border-color:var(--gold-dim);color:var(--gold);background:rgba(201,168,76,.04)}
-.contact-card-icon{font-size:28px}
-.contact-card-type{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
-.contact-card-val{font-family:var(--ff-display);font-size:17px;color:var(--cream)}
-
-/* ═══ FOOTER / HEALTH WARNING ═══ */
-footer{
-  padding:32px 40px;border-top:1px solid var(--border);
-  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
-}
-.footer-logo{font-family:var(--ff-display);font-size:16px;letter-spacing:4px;color:var(--gold-dim);text-transform:uppercase}
+body::before{content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  background-size:200px 200px;pointer-events:none;z-index:9999;opacity:.4}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
+  padding:24px 60px;background:linear-gradient(to bottom,rgba(0,0,0,.95),transparent);
+  border-bottom:1px solid rgba(201,168,76,.1);backdrop-filter:blur(10px)}
+.nav-logo{font-family:var(--ff-display);font-size:28px;font-weight:500;letter-spacing:6px;color:var(--gold);text-decoration:none;text-transform:uppercase}
+.nav-links{display:flex;gap:32px;list-style:none;align-items:center}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:11px;letter-spacing:3px;text-transform:uppercase;transition:color .3s}
+.nav-links a:hover{color:var(--gold)}
+.nav-login-btn{background:transparent;border:1px solid var(--gold-dim);color:var(--gold);padding:9px 22px;
+  font-family:var(--ff-body);font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .3s}
+.nav-login-btn:hover{background:var(--gold);color:var(--black)}
+.nav-order{background:var(--gold);border:1px solid var(--gold);color:var(--black);padding:9px 22px;
+  font-family:var(--ff-body);font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .3s;font-weight:500}
+.nav-order:hover{opacity:.85}
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:120px 60px 80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 60%,rgba(201,168,76,.06) 0%,transparent 70%)}
+.hero-line{width:1px;height:80px;background:linear-gradient(to bottom,transparent,var(--gold-dim));
+  margin-bottom:48px;animation:lineDown 1.2s ease forwards;opacity:0;transform-origin:top}
+@keyframes lineDown{0%{opacity:0;transform:scaleY(0)}100%{opacity:1;transform:scaleY(1)}}
+.hero-subtitle{font-size:10px;letter-spacing:6px;text-transform:uppercase;color:var(--gold);margin-bottom:32px;opacity:0;animation:fadeUp 1s .3s ease forwards}
+.hero-title{font-family:var(--ff-display);font-size:clamp(64px,10vw,140px);font-weight:300;line-height:.9;letter-spacing:-2px;color:var(--cream);margin-bottom:16px;opacity:0;animation:fadeUp 1s .5s ease forwards}
+.hero-title em{font-style:italic;color:var(--gold)}
+.hero-desc{font-size:13px;letter-spacing:2px;color:var(--muted);margin-top:40px;max-width:500px;line-height:2;opacity:0;animation:fadeUp 1s .8s ease forwards}
+.hero-scroll{margin-top:80px;display:flex;flex-direction:column;align-items:center;gap:12px;opacity:0;animation:fadeUp 1s 1.1s ease forwards}
+.hero-scroll span{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--muted)}
+.scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--gold-dim),transparent);animation:scrollPulse 2s infinite}
+@keyframes scrollPulse{0%,100%{opacity:.3}50%{opacity:1}}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
+/* SECTIONS */
+section{padding:100px 60px}
+.section-header{display:flex;align-items:center;gap:24px;margin-bottom:64px}
+.section-num{font-family:var(--ff-display);font-size:11px;color:var(--gold-dim);letter-spacing:3px;white-space:nowrap}
+.section-rule{flex:1;height:1px;background:linear-gradient(to right,var(--border),transparent)}
+.section-title{font-family:var(--ff-display);font-size:clamp(40px,5vw,64px);font-weight:300;color:var(--cream);line-height:1.1;white-space:nowrap}
+/* PRODUCT BLOCKS */
+#products{background:var(--deep)}
+.product-block{margin-bottom:80px;border:1px solid var(--border);background:var(--panel);overflow:hidden}
+.product-header{display:grid;grid-template-columns:1fr auto;gap:32px;padding:40px 48px;
+  border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(201,168,76,.04) 0%,transparent 60%);align-items:start}
+.product-brand{font-family:var(--ff-display);font-size:clamp(22px,3vw,36px);font-weight:500;color:var(--gold);letter-spacing:1px;line-height:1.2;margin-bottom:12px}
+.product-brand-sub{font-size:11px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:20px}
+.product-specs{display:flex;flex-wrap:wrap;gap:8px}
+.spec-tag{padding:4px 12px;border:1px solid var(--border);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+.product-price-block{text-align:right;padding:8px 0}
+.price-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.price-wholesale{font-family:var(--ff-display);font-size:38px;font-weight:300;color:var(--cream);line-height:1}
+.price-wholesale span{font-size:16px;color:var(--muted)}
+.price-retail{font-size:13px;color:var(--gold);margin-top:6px;letter-spacing:1px}
+.product-image-section{padding:0 48px 40px;display:grid;grid-template-columns:280px 1fr;gap:48px;align-items:start}
+.product-image-wrap{position:relative;aspect-ratio:3/4;overflow:hidden;border:1px solid var(--border);background:#0d0d0d;cursor:pointer}
+.product-image-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .6s;display:block}
+.product-image-wrap:hover img{transform:scale(1.05)}
+.edit-overlay{position:absolute;inset:0;background:rgba(0,0,0,.7);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;transition:opacity .3s;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold)}
+.product-image-wrap:hover .edit-overlay{opacity:1}
+.edit-icon{width:32px;height:32px;border:1px solid var(--gold-dim);display:flex;align-items:center;justify-content:center;font-size:14px}
+.flavors-section{padding-top:0}
+.flavors-title{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:24px}
+.flavors-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1px;background:var(--border)}
+.flavor-item{background:var(--panel);padding:16px 20px;transition:background .2s;position:relative}
+.flavor-item.has-detail{cursor:pointer}
+.flavor-item.has-detail::after{content:'▸';position:absolute;top:12px;right:12px;font-size:10px;color:var(--gold-dim);opacity:.6}
+.flavor-item.has-detail:hover{background:#1c1c1c}
+.flavor-item.has-detail:hover::after{opacity:1;color:var(--gold)}
+.flavor-item:not(.has-detail){background:var(--panel)}
+.flavor-num{font-size:9px;color:var(--gold-dim);letter-spacing:2px;margin-bottom:6px}
+.flavor-en{font-family:var(--ff-display);font-size:15px;color:var(--cream);line-height:1.3;margin-bottom:4px}
+.flavor-ru{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+/* CALCULATOR */
+#order{background:var(--black)}
+.calc-container{border:1px solid var(--border);overflow:hidden}
+.calc-top{padding:40px 48px;background:linear-gradient(135deg,rgba(201,168,76,.05) 0%,transparent 60%);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.calc-heading{font-family:var(--ff-display);font-size:28px;font-weight:300;color:var(--cream)}
+.calc-note{font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+.calc-table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{padding:16px 24px;text-align:left;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-dim);background:rgba(201,168,76,.04);border-bottom:1px solid var(--border);font-weight:400;white-space:nowrap}
+thead th:last-child{text-align:right}
+thead th:nth-child(3),thead th:nth-child(4){text-align:center}
+tbody tr{border-bottom:1px solid rgba(42,42,42,.5);transition:background .15s}
+tbody tr:hover{background:rgba(201,168,76,.02)}
+tbody tr.cat-row{background:rgba(201,168,76,.05);border-bottom:1px solid var(--border)}
+tbody tr.cat-row td{padding:14px 24px;color:var(--gold);font-family:var(--ff-display);font-size:14px;letter-spacing:1px}
+tbody td{padding:14px 24px;font-size:12px;color:var(--text);vertical-align:middle}
+tbody td:nth-child(3),tbody td:nth-child(4){text-align:center}
+tbody td:last-child{text-align:right}
+.td-en{font-family:var(--ff-display);font-size:15px;color:var(--cream)}
+.td-ru{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.td-price{font-family:var(--ff-display);font-size:18px;color:var(--cream);white-space:nowrap}
+.td-sm{font-size:10px;color:var(--muted)}
+input.qty{width:80px;background:var(--black);border:1px solid var(--border);color:var(--cream);text-align:center;padding:8px 12px;font-family:var(--ff-body);font-size:13px;outline:none;transition:border-color .2s;-moz-appearance:textfield}
+input.qty:focus{border-color:var(--gold-dim)}
+input.qty::-webkit-outer-spin-button,input.qty::-webkit-inner-spin-button{-webkit-appearance:none}
+.td-total{font-family:var(--ff-display);font-size:18px;color:var(--gold);white-space:nowrap}
+.calc-summary{padding:32px 48px;background:rgba(201,168,76,.04);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px}
+.sum-items{display:flex;gap:48px;flex-wrap:wrap}
+.sum-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.sum-val{font-family:var(--ff-display);font-size:32px;font-weight:300;color:var(--cream)}
+.sum-val.gold{color:var(--gold)}
+.btn-primary{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:16px 48px;font-family:var(--ff-body);font-size:10px;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:all .3s;white-space:nowrap}
+.btn-primary:hover{background:var(--gold);color:var(--black)}
+.btn-muted{background:transparent;border:1px solid var(--border);color:var(--muted);padding:16px 24px;font-family:var(--ff-body);font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .3s}
+.btn-muted:hover{border-color:var(--muted);color:var(--text)}
+/* CONTACT */
+#contact{background:var(--deep);text-align:center}
+.contact-inner{max-width:600px;margin:0 auto}
+.contact-title{font-family:var(--ff-display);font-size:clamp(40px,6vw,72px);font-weight:300;color:var(--cream);margin-bottom:24px;line-height:1}
+.contact-title em{font-style:italic;color:var(--gold)}
+.contact-desc{font-size:11px;letter-spacing:2px;color:var(--muted);margin-bottom:48px;line-height:2;text-transform:uppercase}
+.contact-links{display:flex;flex-wrap:wrap;justify-content:center;gap:16px}
+.cbtn{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border:1px solid var(--border);color:var(--text);text-decoration:none;font-size:10px;letter-spacing:3px;text-transform:uppercase;transition:all .3s}
+.cbtn:hover{border-color:var(--gold-dim);color:var(--gold)}
+.cbtn.primary{border-color:var(--gold-dim);background:rgba(201,168,76,.06);color:var(--gold)}
+.cbtn.primary:hover{background:var(--gold);color:var(--black)}
+/* FOOTER */
+footer{padding:40px 60px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-logo{font-family:var(--ff-display);font-size:18px;font-weight:500;letter-spacing:4px;color:var(--gold-dim);text-transform:uppercase}
 .footer-text{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
-.health-bar{
-  background:#111;border-top:1px solid #1e1e1e;padding:16px 40px;text-align:center;
-}
-.health-text{
-  font-family:var(--ff-display);font-size:clamp(13px,1.8vw,18px);
-  color:#777;letter-spacing:2px;line-height:1.6;
-}
-.health-text strong{color:#999}
-.health-18{color:var(--gold-dim);font-size:1.1em}
-
-/* ═══ MODALS (shared) ═══ */
+/* MODAL OVERLAY */
 .moverlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.88);align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
 .moverlay.open{display:flex}
 .mbox{background:var(--panel);border:1px solid var(--border);padding:52px;max-width:660px;width:100%;margin:auto}
@@ -452,47 +151,68 @@ footer{
 .mtotal span:last-child{color:var(--gold)}
 .mactions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
 .mbtn{padding:13px 28px;font-family:var(--ff-body);font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .3s;border:none}
-.mbtn.p{background:var(--gold);border:1px solid var(--gold);color:var(--black)}.mbtn.p:hover{opacity:.85}
-.mbtn.s{background:transparent;border:1px solid var(--border);color:var(--muted)}.mbtn.s:hover{border-color:var(--muted);color:var(--text)}
+.mbtn.p{background:var(--gold);border:1px solid var(--gold);color:var(--black)}
+.mbtn.p:hover{opacity:.85}
+.mbtn.s{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.mbtn.s:hover{border-color:var(--muted);color:var(--text)}
+/* FORM */
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px}
+.fcol{display:flex;flex-direction:column;gap:4px}
+.ffull{grid-column:1/-1}
+.flabel{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.finput{background:var(--black);border:1px solid var(--border);color:var(--cream);padding:11px 14px;font-family:var(--ff-body);font-size:12px;outline:none;transition:border-color .2s;width:100%}
+.finput:focus{border-color:var(--gold-dim)}
+.finput.error{border-color:var(--red)}
+textarea.finput{resize:vertical;min-height:68px}
+.req{color:var(--gold)}
 .ferr{font-size:10px;color:var(--red);display:none;margin-top:2px}
-.preorder-section{background:rgba(155,89,182,.07);border:1px solid rgba(155,89,182,.3);padding:14px 18px;margin:14px 0}
-.preorder-section-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--purple);margin-bottom:8px}
-.preorder-badge{display:inline-block;padding:1px 8px;font-size:8px;letter-spacing:2px;text-transform:uppercase;border:1px solid var(--purple);color:var(--purple);background:rgba(155,89,182,.08)}
-.flavor-modal-img{width:100%;max-height:300px;object-fit:cover;display:block;margin-bottom:20px;border:1px solid var(--border)}
-.flavor-modal-en{font-family:var(--ff-display);font-size:34px;color:var(--cream);margin-bottom:4px}
-.flavor-modal-ru{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:16px}
+/* PERSONAL DATA */
+.pd-section{margin:18px 0;padding:16px;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15)}
+.pd-check{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:11px;color:var(--text);line-height:1.6}
+.pd-check:last-child{margin-bottom:0}
+.pd-check input[type=checkbox]{width:16px;height:16px;flex-shrink:0;margin-top:2px;cursor:pointer;accent-color:var(--gold)}
+.pd-check a{color:var(--gold);text-decoration:underline;margin-left:4px}
+/* SUCCESS */
+.success-wrap{text-align:center;padding:20px 0}
+.success-icon{font-size:48px;color:var(--green);margin-bottom:12px}
+.success-title{font-family:var(--ff-display);font-size:32px;color:var(--cream);margin-bottom:8px}
+.success-sub{font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:28px}
+/* FLAVOR MODAL */
+.flavor-modal-img{width:100%;max-height:340px;object-fit:cover;display:block;margin-bottom:24px;border:1px solid var(--border)}
+.flavor-modal-en{font-family:var(--ff-display);font-size:36px;color:var(--cream);margin-bottom:6px}
+.flavor-modal-ru{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:20px}
 .flavor-modal-desc{font-size:13px;color:var(--text);line-height:1.9}
-
-/* ═══ WELCOME POPUP ═══ */
-#welcome-overlay{display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.93);align-items:center;justify-content:center;padding:20px;}
-#welcome-overlay.open{display:flex}
-.welcome-box{background:var(--panel);border:1px solid var(--border);max-width:540px;width:100%;padding:52px 48px;text-align:center;position:relative;}
-.welcome-box::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,168,76,.06),transparent 60%);pointer-events:none}
-.welcome-line{width:1px;height:44px;background:linear-gradient(to bottom,transparent,var(--gold-dim));margin:0 auto 28px}
-.welcome-logo{font-family:var(--ff-display);font-size:clamp(28px,5vw,48px);font-weight:500;color:var(--gold);letter-spacing:4px;text-transform:uppercase;margin-bottom:6px;line-height:1}
-.welcome-subtitle{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:24px}
-.welcome-divider{width:40px;height:1px;background:var(--border);margin:0 auto 22px}
-.welcome-age-badge{display:inline-block;border:1px solid var(--gold-dim);font-family:var(--ff-display);font-size:clamp(32px,5vw,50px);font-weight:300;color:var(--gold);padding:6px 24px;letter-spacing:2px;margin-bottom:22px;line-height:1}
-.welcome-text{font-family:var(--ff-body);font-size:13px;color:var(--text);line-height:1.9;letter-spacing:.3px;margin-bottom:24px}
-.welcome-check-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:24px}
-.welcome-check-row input[type=checkbox]{width:17px;height:17px;cursor:pointer;accent-color:var(--gold);flex-shrink:0}
-.welcome-check-label{font-size:12px;color:var(--text);cursor:pointer;text-align:left;line-height:1.5}
-.welcome-btn{background:var(--gold);border:none;color:var(--black);padding:15px 48px;font-family:var(--ff-body);font-size:11px;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:opacity .3s;font-weight:500;display:block;width:100%}
-.welcome-btn:hover{opacity:.85}.welcome-btn:disabled{opacity:.3;cursor:not-allowed}
-.welcome-decline{margin-top:12px;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;background:none;border:none;cursor:pointer;transition:color .2s;font-family:var(--ff-body)}
-.welcome-decline:hover{color:var(--text)}
-#declined-overlay{display:none;position:fixed;inset:0;z-index:10001;background:#0a0a0a;align-items:center;justify-content:center;text-align:center;padding:40px}
-
-/* ═══ ADMIN (preserved styles) ═══ */
+/* ADMIN TRIGGER */
+.admin-trigger{position:fixed;bottom:24px;right:24px;width:44px;height:44px;background:var(--panel);border:1px solid var(--border);color:var(--muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:200}
+.admin-trigger:hover{border-color:var(--gold-dim);color:var(--gold)}
+/* ADMIN LOGIN */
+#admin-login{display:none;position:fixed;inset:0;z-index:1001;background:var(--black);align-items:center;justify-content:center}
+#admin-login.open{display:flex}
+.lbox{text-align:center;border:1px solid var(--border);padding:56px 72px;background:var(--panel);min-width:340px}
+.ltitle{font-family:var(--ff-display);font-size:32px;color:var(--cream);letter-spacing:2px;margin-bottom:8px}
+.lsub{font-size:9px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:32px}
+.linput{width:100%;background:var(--black);border:1px solid var(--border);color:var(--cream);padding:12px 16px;font-family:var(--ff-body);font-size:12px;outline:none;text-align:center;letter-spacing:2px;margin-bottom:12px;transition:border-color .2s}
+.linput:focus{border-color:var(--gold-dim)}
+.lbtn{width:100%;background:transparent;border:1px solid var(--gold-dim);color:var(--gold);padding:13px;font-family:var(--ff-body);font-size:10px;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:all .3s;margin-bottom:8px}
+.lbtn:hover{background:var(--gold);color:var(--black)}
+.lerr{font-size:10px;color:var(--red);letter-spacing:2px;margin-top:8px;display:none}
+/* ADMIN PANEL */
+#admin-panel{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.97);overflow:hidden}
+#admin-panel.open{display:flex}
+/* Modals inside admin must be above it */
+#edit-order-modal{z-index:1003}
+#flavor-modal{z-index:502}
 .aside{width:230px;flex-shrink:0;background:var(--deep);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto}
 .aside-logo{font-family:var(--ff-display);font-size:20px;color:var(--gold);letter-spacing:4px;padding:26px 22px 22px;border-bottom:1px solid var(--border)}
 .anav{display:block;width:100%;text-align:left;padding:11px 22px;background:none;border:none;font-family:var(--ff-body);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:all .2s;border-left:2px solid transparent}
-.anav:hover{color:var(--text);background:rgba(255,255,255,.03)}.anav.act{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.05)}
+.anav:hover{color:var(--text);background:rgba(255,255,255,.03)}
+.anav.act{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.05)}
 .anav-sep{height:1px;background:var(--border);margin:5px 0}
 .aside-close{margin:auto 22px 22px;background:none;border:1px solid var(--border);color:var(--muted);padding:10px;font-family:var(--ff-body);font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s}
 .aside-close:hover{border-color:var(--red);color:var(--red)}
 .acontent{flex:1;overflow-y:auto;padding:40px}
-.atab{display:none}.atab.act{display:block}
+.atab{display:none}
+.atab.act{display:block}
 .atitle{font-family:var(--ff-display);font-size:34px;color:var(--cream);margin-bottom:6px}
 .asub{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:32px}
 .ablock{background:var(--panel);border:1px solid var(--border);padding:26px;margin-bottom:18px}
@@ -506,12 +226,14 @@ textarea.ainput{resize:vertical;min-height:64px}
 .asave{background:var(--gold);border:none;color:var(--black);padding:14px 40px;font-family:var(--ff-body);font-size:10px;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:opacity .2s;font-weight:500}
 .asave:hover{opacity:.85}
 .amsg{font-size:9px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-left:12px;display:none}
+/* Products Editor */
 .pecard{background:var(--black);border:1px solid var(--border);padding:18px;margin-bottom:12px}
 .pecard-hdr{display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none}
 .pecard-name{font-family:var(--ff-display);font-size:17px;color:var(--gold);flex:1}
 .pecard-del{background:none;border:1px solid var(--border);color:var(--muted);padding:5px 12px;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s}
 .pecard-del:hover{border-color:var(--red);color:var(--red)}
-.pecard-body{display:none;margin-top:18px}.pecard-body.open{display:block}
+.pecard-body{display:none;margin-top:18px}
+.pecard-body.open{display:block}
 .fleditor-hdr{display:grid;grid-template-columns:1fr 1fr auto auto;gap:8px;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .fleditor-hdr span{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim)}
 .flrow{margin-bottom:8px;background:rgba(255,255,255,.02);border:1px solid var(--border)}
@@ -529,12 +251,14 @@ textarea.ainput{resize:vertical;min-height:64px}
 .fladd:hover{border-color:var(--gold-dim);color:var(--gold)}
 .add-block-btn{background:none;border:1px dashed var(--gold-dim);color:var(--gold);padding:14px 32px;font-family:var(--ff-body);font-size:10px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .2s;width:100%;margin-top:12px}
 .add-block-btn:hover{background:rgba(201,168,76,.08)}
+/* Photos */
 .photogrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .photoitem{background:var(--black);border:1px solid var(--border);padding:14px}
 .photoitem .ptitle{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:block}
 .photoitem img{width:100%;height:100px;object-fit:cover;display:block;margin-bottom:8px;border:1px solid var(--border)}
 .file-lbl{display:inline-block;padding:7px 13px;border:1px dashed var(--border);color:var(--muted);font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-top:5px}
 .file-lbl:hover{border-color:var(--gold-dim);color:var(--gold)}
+/* Design Tab */
 .color-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .color-item{display:flex;flex-direction:column;gap:6px}
 .color-preview{width:100%;height:40px;border:1px solid var(--border);cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5)}
@@ -545,6 +269,7 @@ input[type=color].cpicker{position:absolute;inset:0;width:100%;height:100%;opaci
 .theme-presets{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
 .theme-btn{padding:10px 20px;border:1px solid var(--border);background:none;color:var(--muted);font-family:var(--ff-body);font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s}
 .theme-btn:hover{border-color:var(--gold-dim);color:var(--gold)}
+/* Orders */
 .orders-filter{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
 .ofbtn{background:none;border:1px solid var(--border);color:var(--muted);padding:7px 16px;font-family:var(--ff-body);font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s}
 .ofbtn:hover,.ofbtn.act{border-color:var(--gold-dim);color:var(--gold)}
@@ -554,8 +279,10 @@ input[type=color].cpicker{position:absolute;inset:0;width:100%;height:100%;opaci
 .onum{font-family:var(--ff-display);font-size:19px;color:var(--cream)}
 .odate{font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
 .ostatus{padding:3px 10px;font-size:8px;letter-spacing:2px;text-transform:uppercase;border:1px solid}
-.ostatus.new{color:var(--gold);border-color:var(--gold-dim)}.ostatus.done{color:var(--green);border-color:var(--green)}
-.ocustomer{font-size:11px;color:var(--text);margin-bottom:7px;line-height:1.7}.ocustomer strong{color:var(--cream)}
+.ostatus.new{color:var(--gold);border-color:var(--gold-dim)}
+.ostatus.done{color:var(--green);border-color:var(--green)}
+.ocustomer{font-size:11px;color:var(--text);margin-bottom:7px;line-height:1.7}
+.ocustomer strong{color:var(--cream)}
 .ocomment{font-size:10px;color:var(--text);margin-bottom:7px;padding:7px 11px;background:rgba(201,168,76,.04);border-left:2px solid var(--gold-dim)}
 .oitems{font-size:10px;color:var(--muted);margin-bottom:7px;line-height:1.7}
 .ototrow{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--border);margin-top:6px}
@@ -563,29 +290,43 @@ input[type=color].cpicker{position:absolute;inset:0;width:100%;height:100%;opaci
 .ototval{font-family:var(--ff-display);font-size:22px;color:var(--gold)}
 .oacts{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .oact{background:none;border:1px solid var(--border);color:var(--muted);padding:5px 12px;font-family:var(--ff-body);font-size:8px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s}
-.oact:hover{border-color:var(--muted);color:var(--text)}.oact.done:hover{border-color:var(--green);color:var(--green)}.oact.del:hover{border-color:var(--red);color:var(--red)}.oact.edit:hover{border-color:var(--gold-dim);color:var(--gold)}
+.oact:hover{border-color:var(--muted);color:var(--text)}
+.oact.done:hover{border-color:var(--green);color:var(--green)}
+.oact.del:hover{border-color:var(--red);color:var(--red)}
+.oact.edit:hover{border-color:var(--gold-dim);color:var(--gold)}
 .oempty{text-align:center;padding:52px 0;color:var(--muted);font-size:11px;letter-spacing:3px;text-transform:uppercase}
 .badge{display:inline-block;background:var(--gold);color:var(--black);font-size:8px;padding:2px 6px;margin-left:5px;font-weight:600}
-.ohistory{margin-top:12px;border-top:1px dashed var(--border);padding-top:10px;display:none}.ohistory.open{display:block}
+/* Order history */
+.ohistory{margin-top:12px;border-top:1px dashed var(--border);padding-top:10px;display:none}
+.ohistory.open{display:block}
 .ohist-entry{font-size:10px;color:var(--muted);padding:8px 0;border-bottom:1px solid rgba(42,42,42,.4);line-height:1.7}
 .ohist-entry strong{color:var(--text)}
+/* Edit order modal */
 .edit-order-items{max-height:200px;overflow-y:auto;margin-bottom:14px}
 .edit-item-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:11px;color:var(--text)}
 .edit-item-row span{flex:1}
 .edit-item-qty{width:60px;background:var(--black);border:1px solid var(--border);color:var(--cream);padding:5px 8px;font-family:var(--ff-body);font-size:11px;text-align:center;outline:none;-moz-appearance:textfield}
 .edit-item-qty::-webkit-outer-spin-button,.edit-item-qty::-webkit-inner-spin-button{-webkit-appearance:none}
-.pdf-preview{display:flex;align-items:center;gap:10px;padding:10px;background:rgba(201,168,76,.05);border:1px solid var(--border);margin-top:8px}
-.pdf-preview a{font-size:10px;color:var(--gold);text-decoration:none;letter-spacing:1px}
-.pdf-preview a:hover{text-decoration:underline}
-.doc-open-admin-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:5px 12px;font-family:var(--ff-body);font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s}
-.doc-open-admin-btn:hover{border-color:var(--gold-dim);color:var(--gold)}
-.doc-del-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:5px 12px;font-size:9px;cursor:pointer;transition:all .2s;letter-spacing:2px;text-transform:uppercase;font-family:var(--ff-body)}
-.doc-del-btn:hover{border-color:var(--red);color:var(--red)}
-.stock-badge,.sb{display:inline-flex;align-items:center;padding:2px 8px;font-size:8px;letter-spacing:2px;text-transform:uppercase;border:1px solid;white-space:nowrap}
-.stock-ok{color:var(--green);border-color:var(--green);background:rgba(39,174,96,.08)}
+/* Stock badges */
+.stock-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;font-size:8px;letter-spacing:2px;text-transform:uppercase;border:1px solid;white-space:nowrap}
+.stock-ok{color:#27ae60;border-color:#27ae60;background:rgba(39,174,96,.08)}
 .stock-low{color:#f39c12;border-color:#f39c12;background:rgba(243,156,18,.08)}
-.stock-out,.stock-pre{color:var(--purple);border-color:var(--purple);background:rgba(155,89,182,.08)}
+.stock-out{color:var(--red);border-color:var(--red);background:rgba(192,57,43,.08)}
 .stock-unlim{color:var(--muted);border-color:var(--border)}
+.preorder-badge{display:inline-block;padding:2px 8px;font-size:8px;letter-spacing:2px;text-transform:uppercase;border:1px solid #9b59b6;color:#9b59b6;background:rgba(155,89,182,.08);white-space:nowrap}
+/* table stock column */
+.stock-cell{text-align:center;min-width:110px}
+/* qty warning */
+.qty-over{border-color:#f39c12!important}
+.qty-preorder{border-color:#9b59b6!important}
+/* preorder note in calc */
+.preorder-note{font-size:9px;color:#9b59b6;letter-spacing:1px;margin-top:2px}
+/* stock warning banner in calc */
+.stock-warn-row td{background:rgba(155,89,182,.06);padding:10px 24px}
+.stock-warn-row .sw-text{font-size:10px;color:#9b59b6;letter-spacing:1px;line-height:1.7}
+/* preorder modal highlight */
+.preorder-section{background:rgba(155,89,182,.07);border:1px solid rgba(155,89,182,.3);padding:14px 18px;margin:14px 0}
+.preorder-section-title{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#9b59b6;margin-bottom:8px}
 .stock-admin-row{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
 .stock-admin-row:last-child{border-bottom:none}
 .stock-name{font-size:12px;color:var(--text)}
@@ -596,66 +337,48 @@ input[type=color].cpicker{position:absolute;inset:0;width:100%;height:100%;opaci
 .stock-unlim-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 12px;font-size:9px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;white-space:nowrap}
 .stock-unlim-btn:hover{border-color:var(--gold-dim);color:var(--gold)}
 .stock-group-title{font-family:var(--ff-display);font-size:18px;color:var(--gold);margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.pd-section{background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);padding:14px 18px;margin:14px 0}
-.pd-check{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:11px;color:var(--text);line-height:1.6}
-.pd-check:last-child{margin-bottom:0}
-.pd-check input[type=checkbox]{width:16px;height:16px;flex-shrink:0;margin-top:2px;cursor:pointer;accent-color:var(--gold)}
-.pd-check a{color:var(--gold);text-decoration:underline}
-.success-wrap{text-align:center;padding:24px 0}
-.success-icon{font-size:48px;color:var(--green);margin-bottom:12px}
-.success-title{font-family:var(--ff-display);font-size:32px;color:var(--cream);margin-bottom:8px}
-.success-sub{font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:28px}
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px}
-.fcol{display:flex;flex-direction:column;gap:4px}
-.ffull{grid-column:1/-1}
-.flabel{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
-.finput{background:var(--black);border:1px solid var(--border);color:var(--cream);padding:11px 14px;font-family:var(--ff-body);font-size:12px;outline:none;transition:border-color .2s;width:100%}
-.finput:focus{border-color:var(--gold-dim)}.finput.error{border-color:var(--red)}
-textarea.finput{resize:vertical;min-height:68px}
-.req{color:var(--gold)}
-#admin-panel{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.97);overflow:hidden}
-#admin-panel.open{display:flex}
-#edit-order-modal{z-index:1003}
-#admin-login{display:none;position:fixed;inset:0;z-index:1001;background:var(--black);align-items:center;justify-content:center}
-#admin-login.open{display:flex}
-.lbox{text-align:center;border:1px solid var(--border);padding:56px 72px;background:var(--panel);min-width:340px}
-.ltitle{font-family:var(--ff-display);font-size:32px;color:var(--cream);letter-spacing:2px;margin-bottom:8px}
-.lsub{font-size:9px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:32px}
-.linput{width:100%;background:var(--black);border:1px solid var(--border);color:var(--cream);padding:12px 16px;font-family:var(--ff-body);font-size:12px;outline:none;text-align:center;letter-spacing:2px;margin-bottom:12px;transition:border-color .2s}
-.linput:focus{border-color:var(--gold-dim)}
-.lbtn{width:100%;background:transparent;border:1px solid var(--gold-dim);color:var(--gold);padding:13px;font-family:var(--ff-body);font-size:10px;letter-spacing:4px;text-transform:uppercase;cursor:pointer;transition:all .3s;margin-bottom:8px}
-.lbtn:hover{background:var(--gold);color:var(--black)}
-.lerr{font-size:10px;color:var(--red);letter-spacing:2px;margin-top:8px;display:none}
+.pdf-preview{display:flex;align-items:center;gap:10px;padding:10px;background:rgba(201,168,76,.05);border:1px solid var(--border);margin-top:8px}
+.pdf-preview a{font-size:10px;color:var(--gold);text-decoration:none;letter-spacing:1px}
+.pdf-preview a:hover{text-decoration:underline}
+/* Document cards */
+.doc-card{background:var(--black);border:1px solid var(--border);padding:20px 24px;display:flex;align-items:center;gap:16px;transition:border-color .2s;margin-bottom:1px}
+.doc-card:hover{border-color:rgba(201,168,76,.3)}
+.doc-icon{font-size:28px;flex-shrink:0;width:48px;text-align:center}
+.doc-info{flex:1;min-width:0}
+.doc-name{font-family:var(--ff-display);font-size:17px;color:var(--cream);margin-bottom:3px;line-height:1.2}
+.doc-desc{font-size:10px;color:var(--muted);letter-spacing:1px}
+.doc-actions{display:flex;gap:8px;flex-shrink:0}
+.doc-open-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border:1px solid var(--gold-dim);color:var(--gold);text-decoration:none;font-size:9px;letter-spacing:3px;text-transform:uppercase;transition:all .3s;background:transparent}
+.doc-open-btn:hover{background:var(--gold);color:var(--black)}
+.doc-del-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 12px;font-size:9px;cursor:pointer;transition:all .2s;letter-spacing:2px;text-transform:uppercase}
+.doc-del-btn:hover{border-color:var(--red);color:var(--red)}
+.docs-empty-pub{text-align:center;padding:60px 20px;color:var(--muted);font-size:12px;letter-spacing:3px;text-transform:uppercase;grid-column:1/-1}
 /* Responsive */
 @media(max-width:900px){
-  .nav{padding:0 16px;height:56px}
-  .nav-links a{padding:0 12px;font-size:9px}
-  .nav-contact-item{display:none}
-  .nav-vdiv{display:none}
-  .home-hero,.collection-body,.docs-page,.contacts-page{padding-left:20px;padding-right:20px}
-  .collection-header{padding:32px 20px 20px}
-  .co-row,.frow{grid-template-columns:1fr}
-  .arow{grid-template-columns:1fr}
+  nav{padding:18px 20px}.nav-links{display:none}
+  section{padding:60px 20px}
+  .product-image-section{grid-template-columns:1fr}
+  .product-header,.product-image-section{padding:22px}
+  .calc-top{padding:22px;flex-direction:column;align-items:flex-start;gap:8px}
+  .calc-summary{padding:18px}
   #admin-panel{flex-direction:column}
-  .aside{width:100%;flex-direction:row;flex-wrap:wrap;padding:8px;gap:2px;overflow-y:visible}
-  .aside-logo{padding:0 8px 0 0;border:none;font-size:14px}
-  .anav{padding:6px 8px;border-left:none;border-bottom:2px solid transparent;width:auto;font-size:8px}
+  .aside{width:100%;flex-direction:row;flex-wrap:wrap;padding:10px;gap:2px}
+  .aside-logo{padding:0 8px 0 0;border:none;font-size:15px}
+  .anav{padding:7px 9px;border-left:none;border-bottom:2px solid transparent;width:auto;font-size:8px}
   .anav.act{border-left:none;border-bottom-color:var(--gold)}
   .anav-sep,.aside-close{display:none}
-  .acontent{padding:16px}
+  .acontent{padding:18px}
+  .arow{grid-template-columns:1fr}
+  .frow{grid-template-columns:1fr}
   .photogrid{grid-template-columns:1fr}
   .color-grid{grid-template-columns:1fr 1fr}
-  .lbox{padding:40px 20px;min-width:0;width:92%}
-  .mbox,.checkout-box{padding:28px 18px}
-  .cart-panel{width:100vw}
-  .flavors-cards{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
-  footer{padding:20px;flex-direction:column}
-  .health-bar{padding:12px 20px}
+  footer{padding:22px;flex-direction:column}
+  .lbox{padding:36px 22px;min-width:0;width:92%}
+  .mbox{padding:28px 18px}
 }
 </style>
 </head>
 <body>
-
 <!-- FIREBASE LOADER -->
 <div id="fb-loader" style="display:none;position:fixed;inset:0;z-index:9998;background:#0a0a0a;align-items:center;justify-content:center;flex-direction:column;gap:16px">
   <div style="width:40px;height:40px;border:2px solid #2a2a2a;border-top-color:#c9a84c;border-radius:50%;animation:spin .8s linear infinite"></div>
@@ -663,207 +386,108 @@ textarea.finput{resize:vertical;min-height:68px}
 </div>
 <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 
-<!-- WELCOME POPUP -->
-<div id="welcome-overlay">
-  <div class="welcome-box">
-    <div class="welcome-line"></div>
-    <div class="welcome-logo" id="wp-logo">ДУДЕЦ</div>
-    <div class="welcome-subtitle" id="wp-subtitle">Оптовые поставки курительных аксессуаров</div>
-    <div class="welcome-divider"></div>
-    <div class="welcome-age-badge">18+</div>
-    <p class="welcome-text" id="wp-text">Добро пожаловать в <strong>ДУДЕЦ</strong> – оптовые поставки курительных аксессуаров.<br><br>Сайт несёт ознакомительный характер.<br><br>Если вы старше 18 лет и хотите ознакомиться с нашим ассортиментом — нажмите кнопку ниже.</p>
-    <div class="welcome-check-row">
-      <input type="checkbox" id="wp-age-check" onchange="toggleWelcomeBtn()">
-      <label class="welcome-check-label" for="wp-age-check" id="wp-check-label">Я подтверждаю, что мне более 18-ти лет</label>
-    </div>
-    <button class="welcome-btn" id="wp-enter-btn" onclick="confirmWelcome()" disabled>Войти на сайт</button>
-    <button class="welcome-decline" onclick="declineWelcome()" id="wp-decline-btn">Мне нет 18 лет</button>
-  </div>
-</div>
-<div id="declined-overlay">
-  <div>
-    <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(80px,15vw,160px);color:#1e1e1e;font-weight:300;line-height:1">18+</div>
-    <div style="font-size:12px;color:#555;letter-spacing:4px;text-transform:uppercase;margin-top:16px">Доступ ограничен</div>
-    <div style="font-size:11px;color:#555;margin-top:10px;line-height:1.8">Этот сайт предназначен только для лиц старше 18 лет.</div>
-  </div>
-</div>
-
-<!-- ═══ TOP NOTICE BAR ═══ -->
-<div class="top-notice" id="top-notice-bar">Не является продажей</div>
-
-<!-- ═══ NAVIGATION ═══ -->
-<nav class="nav">
-  <a class="nav-logo" href="#" onclick="showPage('home',this);return false" id="nav-logo-text">Joystick</a>
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#" id="nav-logo-text">Joystick</a>
   <ul class="nav-links">
-    <li><a href="#" onclick="showPage('collection',this);return false">Коллекция</a></li>
-    <li><a href="#" onclick="showPage('docs',this);return false">Документы</a></li>
-    <li><a href="#" onclick="showPage('contacts',this);return false">Контакты</a></li>
+    <li><a href="#products">Коллекция</a></li>
+    <li><a href="#order">Прайс</a></li>
+    <li><a href="#docs">Документы</a></li>
+    <li><a href="#contact">Контакт</a></li>
   </ul>
-  <div class="nav-right">
-    <div class="nav-vdiv"></div>
-    <a id="nav-tg" href="#" class="nav-contact-item" target="_blank" style="display:none">
-      <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.016 9.503c-.148.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.559-4.456c.537-.194 1.006.131.89.713z"/></svg>
-      <span id="nav-tg-text"></span>
-    </a>
-    <a id="nav-wa" href="#" class="nav-contact-item" target="_blank" style="display:none">
-      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      <span id="nav-wa-text"></span>
-    </a>
-    <a id="nav-ph" href="#" class="nav-contact-item" style="display:none">
-      <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-      <span id="nav-ph-text"></span>
-    </a>
-    <a id="nav-em" href="#" class="nav-contact-item" style="display:none">
-      <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-      <span id="nav-em-text"></span>
-    </a>
-    <div class="nav-vdiv"></div>
-    <button class="cart-btn" onclick="toggleCart()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96C5 16.1 6.1 17 7 17h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63H19c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0023.46 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
-      Корзина
-      <span class="cart-count" id="cart-count">0</span>
-    </button>
+  <div style="display:flex;gap:12px;align-items:center">
+    <button class="nav-login-btn" onclick="openAdminLogin()">Вход</button>
+    <button class="nav-order" onclick="go('order')">Оформить заказ</button>
   </div>
 </nav>
 
-<!-- ═══ PAGES ═══ -->
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div><div class="hero-line"></div>
+  <p class="hero-subtitle" id="hero-sub">Premium Disposable Series</p>
+  <h1 class="hero-title" id="hero-ttl">Joy<em>stick</em></h1>
+  <p class="hero-desc" id="hero-dsc">Премиальные одноразовые устройства. Исключительный вкус, передовые технологии, продуманный дизайн.</p>
+  <div class="hero-scroll"><span>Листать</span><div class="scroll-line"></div></div>
+</section>
 
-<!-- HOME -->
-<div class="page active" id="page-home">
-  <div class="home-hero">
-    <div class="home-hero-eyebrow" id="hero-sub">Premium Disposable Series</div>
-    <h1 class="home-hero-title" id="hero-ttl">Joy<em>stick</em></h1>
-    <div class="home-divider"></div>
-    <div>
-      <h2 class="home-promo-title" id="promo-title">Интернет-каталог табачной продукции</h2>
-      <p class="home-promo-text" id="promo-text">Представляем вашему вниманию ознакомительный каталог табачной продукции для профессионалов рынка. Наш ассортимент — это лучшие одноразовые устройства с превосходными вкусами и современными технологиями.</p>
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="section-header">
+    <span class="section-num">01 / Коллекция</span>
+    <div class="section-rule"></div>
+    <h2 class="section-title">Линейки</h2>
+  </div>
+  <div id="products-render"></div>
+</section>
+
+<!-- ORDER -->
+<section id="order">
+  <div class="section-header">
+    <span class="section-num">02 / Прайс</span>
+    <div class="section-rule"></div>
+    <h2 class="section-title">Калькулятор</h2>
+  </div>
+  <div class="calc-container">
+    <div class="calc-top">
+      <div><div class="calc-heading">Расчёт стоимости заказа</div>
+      <div class="calc-note">Укажите количество — сумма рассчитается автоматически</div></div>
     </div>
-    <div class="home-cta-row">
-      <button class="btn-gold" onclick="showPage('collection')">Смотреть коллекцию</button>
-      <button class="btn-outline" onclick="showPage('contacts')">Связаться с нами</button>
+    <div class="calc-table-wrap">
+      <table>
+        <thead><tr><th>Позиция</th><th>Цена (₽)</th><th>В наличии</th><th>Количество</th><th>Сумма (₽)</th></tr></thead>
+        <tbody id="calc-body"></tbody>
+      </table>
+    </div>
+    <div class="calc-summary">
+      <div class="sum-items">
+        <div><div class="sum-label">Позиций</div><div class="sum-val" id="s-items">0</div></div>
+        <div><div class="sum-label">Единиц товара</div><div class="sum-val" id="s-units">0</div></div>
+        <div><div class="sum-label">Итого</div><div class="sum-val gold" id="s-total">0 ₽</div></div>
+      </div>
+      <div style="display:flex;gap:12px">
+        <button class="btn-muted" onclick="clearAll()">Очистить</button>
+        <button class="btn-primary" onclick="openOrderModal()">Оформить заказ →</button>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- COLLECTION -->
-<div class="page" id="page-collection">
-  <div class="collection-header">
-    <h1 class="collection-title">Коллекция</h1>
-    <span class="collection-subtitle" id="coll-subtitle">Выберите вкус и добавьте в корзину</span>
-  </div>
-  <div class="collection-body">
-    <div id="products-render"></div>
-  </div>
-</div>
-
+<!-- CONTACT -->
 <!-- DOCUMENTS -->
-<div class="page" id="page-docs">
-  <div class="docs-page">
-    <h1 class="page-title">Документы</h1>
-    <p class="page-sub">Сертификаты и официальные документы</p>
-    <div id="docs-render"></div>
-    <p id="docs-empty" style="display:none" class="docs-empty-msg">Документы не добавлены</p>
+<section id="docs" style="background:var(--black);padding:80px 60px">
+  <div class="section-header">
+    <span class="section-num">03 / Документы</span>
+    <div class="section-rule"></div>
+    <h2 class="section-title">Сертификаты</h2>
   </div>
-</div>
+  <div id="docs-render" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px"></div>
+  <p id="docs-empty" style="font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;display:none">Документы не добавлены</p>
+</section>
 
-<!-- CONTACTS -->
-<div class="page" id="page-contacts">
-  <div class="contacts-page">
-    <h1 class="page-title">Контакты</h1>
-    <p class="page-sub">Свяжитесь с нами любым удобным способом</p>
-    <div class="contacts-grid" id="contact-links"></div>
+<section id="contact">
+  <div class="contact-inner">
+    <h2 class="contact-title">Связаться <em>с нами</em></h2>
+    <p class="contact-desc" id="contact-dsc">Оптовые поставки · Индивидуальные условия · Быстрая доставка</p>
+    <div class="contact-links" id="contact-links"></div>
   </div>
-</div>
+</section>
 
-<!-- FOOTER (always visible) -->
 <footer>
   <div class="footer-logo" id="ftr-logo">Joystick</div>
   <div class="footer-text" id="ftr-text">Оптовый поставщик · Россия</div>
 </footer>
-<div class="health-bar">
-  <p class="health-text">Минздравсоцразвития России предупреждает: <strong>курение вредит Вашему здоровью</strong> &nbsp;·&nbsp; <span class="health-18">18+</span></p>
+
+<!-- HEALTH WARNING -->
+<div style="background:#111;border-top:1px solid #2a2a2a;padding:20px 60px;text-align:center">
+  <p style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(14px,2vw,20px);color:#888;letter-spacing:2px;line-height:1.6">
+    Минздравсоцразвития России предупреждает: <strong style="color:#bbb">курение вредит Вашему здоровью</strong>
+    &nbsp;·&nbsp; <strong style="color:#c9a84c;font-size:1.1em">18+</strong>
+  </p>
 </div>
 
-<!-- ═══ CART OVERLAY ═══ -->
-<div class="cart-overlay" id="cart-overlay">
-  <div class="cart-backdrop" onclick="toggleCart()"></div>
-  <div class="cart-panel">
-    <div class="cart-head">
-      <div class="cart-head-title">Корзина</div>
-      <button class="cart-head-close" onclick="toggleCart()">✕</button>
-    </div>
-    <div class="cart-items" id="cart-items-list">
-      <div class="cart-empty">
-        <div class="cart-empty-icon">🛒</div>
-        <div class="cart-empty-text">Корзина пуста</div>
-      </div>
-    </div>
-    <div class="cart-footer">
-      <div id="cart-pre-notice" class="cart-pre-notice">🕐 Часть позиций будет оформлена как предзаказ</div>
-      <div class="cart-total-row">
-        <span class="cart-total-label">Итого</span>
-        <span class="cart-total-val" id="cart-total-val">0 ₽</span>
-      </div>
-      <button class="cart-checkout-btn" onclick="openCheckout()" id="cart-checkout-btn" style="display:none">Оформить заказ →</button>
-      <button class="cart-clear-btn" onclick="clearCart()" id="cart-clear-btn" style="display:none">Очистить корзину</button>
-    </div>
-  </div>
-</div>
+<button class="admin-trigger" onclick="openAdminLogin()" title="Панель администратора">⚙</button>
 
-<!-- ═══ CHECKOUT OVERLAY ═══ -->
-<div class="checkout-overlay" id="checkout-overlay">
-  <div class="checkout-box">
-    <div id="co-form">
-      <div class="checkout-title">Оформление заказа</div>
-      <div class="checkout-sub" id="co-sub">Проверьте заказ и заполните данные</div>
-      <div class="checkout-items-summary" id="co-items-summary"></div>
-      <div class="checkout-total"><span>Итого</span><span id="co-total-val"></span></div>
-      <div class="co-sep">Ваши данные</div>
-      <div class="co-row">
-        <div class="co-group">
-          <label class="co-label">ФИО <span class="co-req">*</span></label>
-          <input class="co-input" id="co-fio" placeholder="Иванов Иван Иванович">
-          <span class="co-err" id="coe-fio">Введите фамилию и имя (2–3 слова)</span>
-        </div>
-        <div class="co-group">
-          <label class="co-label">Телефон <span class="co-req">*</span></label>
-          <input class="co-input" id="co-phone" placeholder="+71234567890">
-          <span class="co-err" id="coe-phone">Формат: +7 и 10 цифр</span>
-        </div>
-      </div>
-      <div class="co-row">
-        <div class="co-group co-full">
-          <label class="co-label">Email</label>
-          <input class="co-input" id="co-email" placeholder="mail@example.com">
-          <span class="co-err" id="coe-email">Некорректный email</span>
-        </div>
-      </div>
-      <div class="co-row">
-        <div class="co-group co-full">
-          <label class="co-label">Комментарий к заказу</label>
-          <textarea class="co-input" id="co-comment" placeholder="Адрес доставки, пожелания..."></textarea>
-        </div>
-      </div>
-      <div class="pd-block">
-        <div class="pd-row"><input type="checkbox" id="co-pd1"><label for="co-pd1" id="co-pd1-label">Я согласен на обработку моих персональных данных</label></div>
-        <div class="pd-row"><input type="checkbox" id="co-pd2"><label for="co-pd2" id="co-pd2-label">Я согласен с политикой обработки персональных данных</label></div>
-      </div>
-      <span class="co-err" id="coe-pd" style="margin-bottom:8px">Подтвердите согласие с обоими пунктами</span>
-      <div class="checkout-actions">
-        <button class="co-submit" onclick="submitCheckout()">Отправить заказ →</button>
-        <button class="co-cancel" onclick="closeCheckout()">Назад в корзину</button>
-      </div>
-    </div>
-    <div class="co-success" id="co-success">
-      <div class="co-success-icon">✓</div>
-      <div class="co-success-title">Заказ принят!</div>
-      <div class="co-success-sub">Ожидайте — с вами свяжутся в течение дня</div>
-      <button class="co-submit" onclick="closeCheckout();toggleCart()">Закрыть</button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ FLAVOR DETAIL MODAL ═══ -->
+<!-- FLAVOR DETAIL MODAL -->
 <div class="moverlay" id="flavor-modal">
   <div class="mbox" style="max-width:560px">
     <img id="fm-img" class="flavor-modal-img" src="" alt="" style="display:none">
@@ -874,36 +498,70 @@ textarea.finput{resize:vertical;min-height:68px}
   </div>
 </div>
 
-<!-- ═══ PREORDER MODAL (kept for compatibility) ═══ -->
-<div class="moverlay" id="preorder-modal">
-  <div class="mbox" style="max-width:680px">
-    <div class="mtitle">Подтверждение заказа</div>
-    <div class="msub" id="po-sub">Часть товара оформляется как предзаказ</div>
-    <div id="po-instock-wrap" style="display:none"><div class="msep">В наличии</div><ul class="mlist" id="po-instock-list"></ul></div>
-    <div id="po-preorder-wrap" style="display:none"><div class="preorder-section"><div class="preorder-section-title">🕐 Предзаказ</div><ul class="mlist" id="po-preorder-list" style="margin:0"></ul></div></div>
-    <div class="mtotal"><span>Итого</span><span id="po-total"></span></div>
-    <div class="mactions">
-      <button class="mbtn s" onclick="closeModal('preorder-modal')">Закрыть</button>
-    </div>
-    <div id="po-success" style="display:none"><div class="success-wrap"><div class="success-icon">✓</div><div class="success-title">Заказ принят!</div><div class="success-sub" id="po-success-sub">Ожидайте звонка</div><button class="mbtn p" onclick="closeModal('preorder-modal')">Закрыть</button></div></div>
-  </div>
-</div>
-
-<!-- ORDER MODAL (kept for compatibility) -->
+<!-- ORDER MODAL -->
 <div class="moverlay" id="order-modal">
   <div class="mbox" style="max-width:680px">
     <div id="ostep1">
-      <div class="mtitle">Заказ</div><div class="msub"></div>
+      <div class="mtitle">Оформить заказ</div>
+      <div class="msub">Проверьте позиции и заполните данные</div>
+      <div class="msep">Выбранные позиции</div>
       <ul class="mlist" id="mlist"></ul>
       <div class="mtotal"><span>Итого</span><span id="mtotal"></span></div>
-      <div class="mactions"><button class="mbtn s" onclick="closeModal('order-modal')">Закрыть</button></div>
+      <div class="msep">Контактные данные</div>
+      <div class="frow">
+        <div class="fcol">
+          <label class="flabel">ФИО <span class="req">*</span></label>
+          <input class="finput" id="f-fio" placeholder="Иванов Иван Иванович">
+          <span class="ferr" id="e-fio">Введите фамилию и имя (2–3 слова)</span>
+        </div>
+        <div class="fcol">
+          <label class="flabel">Телефон <span class="req">*</span></label>
+          <input class="finput" id="f-phone" placeholder="+71234567890">
+          <span class="ferr" id="e-phone">Формат: +7 и 10 цифр (например +71234567890)</span>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="fcol ffull">
+          <label class="flabel">Email</label>
+          <input class="finput" id="f-email" placeholder="mail@example.com">
+          <span class="ferr" id="e-email">Введите корректный email (должен содержать @)</span>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="fcol ffull">
+          <label class="flabel">Комментарий</label>
+          <textarea class="finput" id="f-comment" placeholder="Адрес доставки, пожелания..."></textarea>
+        </div>
+      </div>
+      <div class="pd-section" id="pd-section">
+        <div class="pd-check">
+          <input type="checkbox" id="pd1">
+          <label for="pd1" id="pd1-label">Я согласен на обработку моих персональных данных</label>
+        </div>
+        <div class="pd-check">
+          <input type="checkbox" id="pd2">
+          <label for="pd2" id="pd2-label">Я согласен с политикой обработки персональных данных</label>
+        </div>
+      </div>
+      <span class="ferr" id="e-pd" style="display:none;margin-bottom:8px;display:none">Подтвердите согласие с обоими пунктами</span>
+      <div class="mactions">
+        <button class="mbtn p" onclick="submitOrder()">Отправить заказ →</button>
+        <button class="mbtn s" onclick="closeModal('order-modal')">Отмена</button>
+      </div>
     </div>
-    <div id="ostep2" style="display:none"><div class="success-wrap"><div class="success-icon">✓</div><div class="success-title">Заказ принят!</div><div class="success-sub">Ожидайте звонка</div><button class="mbtn p" onclick="closeModal('order-modal')">Закрыть</button></div></div>
+    <div id="ostep2" style="display:none">
+      <div class="success-wrap">
+        <div class="success-icon">✓</div>
+        <div class="success-title">Заказ принят!</div>
+        <div class="success-sub">Мы свяжемся с вами в ближайшее время</div>
+        <button class="mbtn p" onclick="closeModal('order-modal')">Закрыть</button>
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- EDIT ORDER MODAL -->
-<div class="moverlay" id="edit-order-modal" style="z-index:1003">
+<div class="moverlay" id="edit-order-modal">
   <div class="mbox" style="max-width:700px">
     <div class="mtitle">Редактировать заказ</div>
     <div class="msub" id="edit-order-id-label"></div>
@@ -912,16 +570,80 @@ textarea.finput{resize:vertical;min-height:68px}
       <div class="fcol"><label class="flabel">ФИО</label><input class="finput" id="edit-fio"></div>
       <div class="fcol"><label class="flabel">Телефон</label><input class="finput" id="edit-phone"></div>
     </div>
-    <div class="frow"><div class="fcol ffull"><label class="flabel">Email</label><input class="finput" id="edit-email"></div></div>
-    <div class="frow"><div class="fcol ffull"><label class="flabel">Комментарий</label><textarea class="finput" id="edit-comment"></textarea></div></div>
+    <div class="frow">
+      <div class="fcol ffull"><label class="flabel">Email</label><input class="finput" id="edit-email"></div>
+    </div>
+    <div class="frow">
+      <div class="fcol ffull"><label class="flabel">Комментарий</label><textarea class="finput" id="edit-comment"></textarea></div>
+    </div>
     <div class="msep">Позиции заказа</div>
     <div class="edit-order-items" id="edit-order-items"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid var(--gold-dim)"><span style="font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase">Итого</span><span class="ototval" id="edit-order-total">0 ₽</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid var(--gold-dim)">
+      <span style="font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase">Итого</span>
+      <span class="ototval" id="edit-order-total">0 ₽</span>
+    </div>
     <div class="msep" style="cursor:pointer" onclick="toggleHistoryInEdit()">История изменений <span id="hist-toggle-icon">▼</span></div>
     <div id="edit-history-list" style="display:none;max-height:200px;overflow-y:auto;margin-bottom:12px"></div>
     <div class="mactions">
       <button class="mbtn p" onclick="saveEditedOrder()">Сохранить изменения</button>
       <button class="mbtn s" onclick="closeModal('edit-order-modal')">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRE-ORDER MODAL -->
+<div class="moverlay" id="preorder-modal">
+  <div class="mbox" style="max-width:680px">
+    <div class="mtitle">Подтверждение заказа</div>
+    <div class="msub" id="po-sub">Часть товара оформляется как предзаказ</div>
+    <div id="po-instock-wrap" style="display:none">
+      <div class="msep">Товар в наличии — будет отправлен сразу</div>
+      <ul class="mlist" id="po-instock-list"></ul>
+    </div>
+    <div id="po-preorder-wrap" style="display:none">
+      <div class="preorder-section">
+        <div class="preorder-section-title">🕐 Предзаказ — будет согласован с менеджером</div>
+        <ul class="mlist" id="po-preorder-list" style="margin:0"></ul>
+      </div>
+      <p style="font-size:11px;color:var(--muted);line-height:1.8;margin-top:8px">
+        По позициям предзаказа мы свяжемся с вами и обсудим сроки поставки и условия.
+      </p>
+    </div>
+    <div class="mtotal"><span>Итого</span><span id="po-total"></span></div>
+    <div class="msep">Контактные данные</div>
+    <div class="frow">
+      <div class="fcol"><label class="flabel">ФИО <span class="req">*</span></label>
+        <input class="finput" id="po-fio" placeholder="Иванов Иван Иванович">
+        <span class="ferr" id="poe-fio">Введите фамилию и имя (2–3 слова)</span></div>
+      <div class="fcol"><label class="flabel">Телефон <span class="req">*</span></label>
+        <input class="finput" id="po-phone" placeholder="+71234567890">
+        <span class="ferr" id="poe-phone">Формат: +7 и 10 цифр</span></div>
+    </div>
+    <div class="frow">
+      <div class="fcol ffull"><label class="flabel">Email</label>
+        <input class="finput" id="po-email" placeholder="mail@example.com">
+        <span class="ferr" id="poe-email">Некорректный email</span></div>
+    </div>
+    <div class="frow">
+      <div class="fcol ffull"><label class="flabel">Комментарий</label>
+        <textarea class="finput" id="po-comment" placeholder="Адрес доставки, пожелания..."></textarea></div>
+    </div>
+    <div class="pd-section">
+      <div class="pd-check"><input type="checkbox" id="po-pd1"><label for="po-pd1" id="po-pd1-label">Я согласен на обработку моих персональных данных</label></div>
+      <div class="pd-check"><input type="checkbox" id="po-pd2"><label for="po-pd2" id="po-pd2-label">Я согласен с политикой обработки персональных данных</label></div>
+    </div>
+    <span class="ferr" id="poe-pd">Подтвердите согласие с обоими пунктами</span>
+    <div class="mactions">
+      <button class="mbtn p" onclick="submitPreOrder()">Отправить заказ →</button>
+      <button class="mbtn s" onclick="closeModal('preorder-modal')">Назад</button>
+    </div>
+    <div id="po-success" style="display:none">
+      <div class="success-wrap">
+        <div class="success-icon">✓</div>
+        <div class="success-title">Заказ принят!</div>
+        <div class="success-sub" id="po-success-sub">Мы свяжемся с вами в ближайшее время</div>
+        <button class="mbtn p" onclick="closeModal('preorder-modal')">Закрыть</button>
+      </div>
     </div>
   </div>
 </div>
@@ -954,16 +676,18 @@ textarea.finput{resize:vertical;min-height:68px}
     <button class="anav" onclick="showTab('t-texts',this)">Тексты сайта</button>
     <button class="anav" onclick="showTab('t-contacts',this)">Контакты</button>
     <button class="anav" onclick="showTab('t-design',this)">Дизайн сайта</button>
-    <button class="anav" onclick="showTab('t-popup',this)">Всплывающее окно</button>
     <button class="anav" onclick="showTab('t-pd',this)">Персональные данные</button>
     <div class="anav-sep"></div>
     <button class="anav" onclick="showTab('t-settings',this)">Настройки</button>
     <button class="aside-close" onclick="closeAdmin()">✕ Закрыть</button>
   </div>
+
   <div class="acontent">
+
     <!-- ORDERS -->
     <div class="atab act" id="t-orders">
-      <div class="atitle">Заказы</div><div class="asub">Все входящие заказы</div>
+      <div class="atitle">Заказы</div>
+      <div class="asub">Все входящие заказы</div>
       <div class="orders-filter">
         <button class="ofbtn act" onclick="filterOrders('all',this)">Все</button>
         <button class="ofbtn" onclick="filterOrders('new',this)">Новые</button>
@@ -971,9 +695,11 @@ textarea.finput{resize:vertical;min-height:68px}
       </div>
       <div id="orders-list"></div>
     </div>
+
     <!-- СКЛАД -->
     <div class="atab" id="t-stock">
-      <div class="atitle">Склад</div><div class="asub">Остатки товара — пусто = без лимита</div>
+      <div class="atitle">Склад</div>
+      <div class="asub">Остатки товара — укажите количество или оставьте пустым для неограниченного</div>
       <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
         <button class="asave" onclick="saveStock()">Сохранить остатки</button>
         <span class="amsg" id="am-stock">✓ Сохранено</span>
@@ -981,30 +707,36 @@ textarea.finput{resize:vertical;min-height:68px}
       </div>
       <div id="stock-admin-list"></div>
     </div>
+
     <!-- PRODUCTS -->
     <div class="atab" id="t-products">
-      <div class="atitle">Товары и вкусы</div><div class="asub">Линейки, цены, характеристики, вкусы</div>
+      <div class="atitle">Товары и вкусы</div>
+      <div class="asub">Линейки, цены, характеристики, вкусы с фото и описанием</div>
       <div id="ped"></div>
       <button class="add-block-btn" onclick="addNewBlock()">+ Добавить новую линейку</button>
       <br><br>
       <button class="asave" onclick="saveProducts()">Сохранить</button>
       <span class="amsg" id="am-products">✓ Сохранено</span>
     </div>
+
     <!-- PHOTOS -->
     <div class="atab" id="t-photos">
-      <div class="atitle">Фотографии</div><div class="asub">Изображения продуктов</div>
+      <div class="atitle">Фотографии</div>
+      <div class="asub">Главные изображения продуктов</div>
       <div class="ablock"><div class="ablk-title">Фото продуктов</div><div class="photogrid" id="photoed"></div></div>
       <button class="asave" onclick="savePhotos()">Сохранить</button>
       <span class="amsg" id="am-photos">✓ Сохранено</span>
     </div>
+
     <!-- DOCUMENTS -->
     <div class="atab" id="t-docs">
-      <div class="atitle">Документы</div><div class="asub">Сертификаты и PDF-файлы</div>
+      <div class="atitle">Документы</div>
+      <div class="asub">Сертификаты, лицензии и другие PDF-файлы</div>
       <div class="ablock">
         <div class="ablk-title">Добавить документ</div>
         <div class="arow">
-          <div><label class="alabel">Название</label><input class="ainput" id="doc-name" placeholder="Сертификат соответствия"></div>
-          <div><label class="alabel">Описание</label><input class="ainput" id="doc-desc" placeholder="Краткое описание"></div>
+          <div><label class="alabel">Название документа</label><input class="ainput" id="doc-name" placeholder="Сертификат соответствия"></div>
+          <div><label class="alabel">Описание (необязательно)</label><input class="ainput" id="doc-desc" placeholder="Краткое описание"></div>
         </div>
         <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
           <label class="alabel" style="margin:0">Загрузить PDF:</label>
@@ -1013,36 +745,32 @@ textarea.finput{resize:vertical;min-height:68px}
           <span id="doc-file-name" style="font-size:10px;color:var(--gold-dim);letter-spacing:1px"></span>
         </div>
         <div class="arow" style="margin-bottom:12px">
-          <div class="afull"><label class="alabel">Или URL на PDF</label><input class="ainput" id="doc-url" placeholder="https://..."></div>
+          <div class="afull"><label class="alabel">Или URL на PDF</label><input class="ainput" id="doc-url" placeholder="https://example.com/cert.pdf"></div>
         </div>
         <button class="asave" onclick="addDoc()">+ Добавить документ</button>
         <span class="amsg" id="am-doc-add">✓ Добавлен</span>
       </div>
-      <div class="ablock"><div class="ablk-title">Загруженные документы</div><div id="docs-admin-list"></div></div>
+      <div class="ablock">
+        <div class="ablk-title">Загруженные документы</div>
+        <div id="docs-admin-list"></div>
+      </div>
     </div>
+
     <!-- TEXTS -->
     <div class="atab" id="t-texts">
-      <div class="atitle">Тексты сайта</div><div class="asub">Все надписи и описания</div>
+      <div class="atitle">Тексты сайта</div>
+      <div class="asub">Все надписи и описания</div>
       <div class="ablock">
-        <div class="ablk-title">Верхняя строка (над навигацией)</div>
-        <div class="arow"><div class="afull"><label class="alabel">Текст уведомления</label><input class="ainput" id="tx-notice" placeholder="Не является продажей"></div></div>
-      </div>
-      <div class="ablock">
-        <div class="ablk-title">Логотип и заголовок</div>
+        <div class="ablk-title">Главный экран</div>
         <div class="arow">
           <div><label class="alabel">Логотип / название</label><input class="ainput" id="tx-logo" placeholder="Joystick"></div>
-          <div><label class="alabel">Подпись под заголовком</label><input class="ainput" id="tx-sub" placeholder="Premium Disposable Series"></div>
+          <div><label class="alabel">Надпись над заголовком</label><input class="ainput" id="tx-sub" placeholder="Premium Disposable Series"></div>
         </div>
+        <div class="arow"><div class="afull"><label class="alabel">Описание</label><textarea class="ainput" id="tx-desc"></textarea></div></div>
       </div>
       <div class="ablock">
-        <div class="ablk-title">Промо-блок на главной</div>
-        <div class="arow">
-          <div><label class="alabel">Заголовок промо-текста</label><input class="ainput" id="tx-promo-title" placeholder="Интернет-каталог табачной продукции"></div>
-        </div>
-        <div class="arow"><div class="afull"><label class="alabel">Основной промо-текст</label><textarea class="ainput" id="tx-promo-text" style="min-height:90px"></textarea></div></div>
-      </div>
-      <div class="ablock">
-        <div class="ablk-title">Подвал</div>
+        <div class="ablk-title">Контакты и подвал</div>
+        <div class="arow"><div class="afull"><label class="alabel">Подпись в разделе «Контакты»</label><input class="ainput" id="tx-cdesc"></div></div>
         <div class="arow">
           <div><label class="alabel">Логотип в подвале</label><input class="ainput" id="tx-flogo"></div>
           <div><label class="alabel">Текст в подвале</label><input class="ainput" id="tx-ftext"></div>
@@ -1051,9 +779,11 @@ textarea.finput{resize:vertical;min-height:68px}
       <button class="asave" onclick="saveTexts()">Сохранить</button>
       <span class="amsg" id="am-texts">✓ Сохранено</span>
     </div>
+
     <!-- CONTACTS -->
     <div class="atab" id="t-contacts">
-      <div class="atitle">Контакты</div><div class="asub">Ссылки связи в навигации и на странице</div>
+      <div class="atitle">Контакты</div>
+      <div class="asub">Кнопки связи на сайте</div>
       <div class="ablock">
         <div class="ablk-title">Каналы связи</div>
         <div class="arow">
@@ -1068,21 +798,27 @@ textarea.finput{resize:vertical;min-height:68px}
       <button class="asave" onclick="saveContacts()">Сохранить</button>
       <span class="amsg" id="am-contacts">✓ Сохранено</span>
     </div>
+
     <!-- DESIGN -->
     <div class="atab" id="t-design">
-      <div class="atitle">Дизайн сайта</div><div class="asub">Цвета, шрифты, внешний вид</div>
+      <div class="atitle">Дизайн сайта</div>
+      <div class="asub">Цвета, шрифты и внешний вид без кода</div>
       <div class="ablock">
         <div class="ablk-title">Быстрые темы</div>
         <div class="theme-presets">
-          <button class="theme-btn" onclick="applyTheme('dark')">● Тёмная</button>
+          <button class="theme-btn" onclick="applyTheme('dark')">● Тёмная (стандарт)</button>
           <button class="theme-btn" onclick="applyTheme('light')">● Светлая</button>
           <button class="theme-btn" onclick="applyTheme('bordo')">● Бордо</button>
           <button class="theme-btn" onclick="applyTheme('blue')">● Сапфировая</button>
         </div>
       </div>
-      <div class="ablock"><div class="ablk-title">Цвета</div><div class="color-grid" id="color-grid"></div></div>
+      <div class="ablock">
+        <div class="ablk-title">Цвета</div>
+        <div class="color-grid" id="color-grid"></div>
+      </div>
       <div class="ablock">
         <div class="ablk-title">Шрифты</div>
+        <label class="alabel">Стиль шрифтов</label>
         <div class="font-options" id="font-options">
           <button class="font-opt" onclick="applyFont('classic',this)" style="font-family:'Cormorant Garamond',serif">Классика</button>
           <button class="font-opt" onclick="applyFont('modern',this)" style="font-family:'Montserrat',sans-serif">Модерн</button>
@@ -1092,60 +828,37 @@ textarea.finput{resize:vertical;min-height:68px}
       <button class="asave" onclick="saveDesign()">Сохранить дизайн</button>
       <span class="amsg" id="am-design">✓ Применено</span>
     </div>
-    <!-- POPUP -->
-    <div class="atab" id="t-popup">
-      <div class="atitle">Всплывающее окно</div><div class="asub">Приветственное окно при открытии сайта</div>
-      <div class="ablock">
-        <div class="ablk-title">Предпросмотр</div>
-        <div style="text-align:center;padding:16px 0">
-          <button class="asave" style="background:transparent;border:1px solid var(--gold-dim);color:var(--gold)" onclick="previewPopup()">👁 Показать окно</button>
-        </div>
-      </div>
-      <div class="ablock">
-        <div class="ablk-title">Содержимое</div>
-        <div class="arow">
-          <div><label class="alabel">Логотип в окне</label><input class="ainput" id="wpl-logo" placeholder="ДУДЕЦ"></div>
-          <div><label class="alabel">Подзаголовок</label><input class="ainput" id="wpl-subtitle" placeholder="Оптовые поставки..."></div>
-        </div>
-        <div class="arow"><div class="afull"><label class="alabel">Текст (поддерживает HTML: &lt;br&gt;, &lt;strong&gt;)</label><textarea class="ainput" id="wpl-text" style="min-height:100px"></textarea></div></div>
-        <div class="arow">
-          <div><label class="alabel">Текст чекбокса</label><input class="ainput" id="wpl-check" placeholder="Я подтверждаю..."></div>
-        </div>
-        <div class="arow">
-          <div><label class="alabel">Кнопка «Войти»</label><input class="ainput" id="wpl-btn" placeholder="Войти на сайт"></div>
-          <div><label class="alabel">Кнопка отказа</label><input class="ainput" id="wpl-decline" placeholder="Мне нет 18 лет"></div>
-        </div>
-        <div class="arow">
-          <div><label class="alabel">Повторять через (дней, 0 = каждый раз)</label><input class="ainput" type="number" id="wpl-days" placeholder="0" min="0"></div>
-          <div></div>
-        </div>
-      </div>
-      <button class="asave" onclick="savePopupSettings()">Сохранить</button>
-      <span class="amsg" id="am-popup">✓ Сохранено</span>
-    </div>
+
     <!-- PERSONAL DATA -->
     <div class="atab" id="t-pd">
-      <div class="atitle">Персональные данные</div><div class="asub">Документы и согласия в форме заказа</div>
+      <div class="atitle">Персональные данные</div>
+      <div class="asub">Документы и согласия в форме заказа</div>
       <div class="ablock">
         <div class="ablk-title">Чекбокс 1 — Согласие на обработку данных</div>
-        <div class="arow"><div class="afull"><label class="alabel">Текст чекбокса</label><input class="ainput" id="pd1-text"></div></div>
         <div class="arow">
-          <div><label class="alabel">Текст ссылки</label><input class="ainput" id="pd1-link-text" placeholder="— ознакомиться"></div>
-          <div><label class="alabel">URL документа</label><input class="ainput" id="pd1-url" placeholder="https://..."></div>
+          <div class="afull"><label class="alabel">Текст чекбокса</label>
+            <input class="ainput" id="pd1-text" value="Я согласен на обработку моих персональных данных"></div>
         </div>
-        <label class="alabel">Загрузить PDF</label>
+        <div class="arow">
+          <div><label class="alabel">Текст ссылки на документ</label><input class="ainput" id="pd1-link-text" placeholder="— ознакомиться с документом"></div>
+          <div><label class="alabel">URL документа (или загрузите ниже)</label><input class="ainput" id="pd1-url" placeholder="https://..."></div>
+        </div>
+        <label class="alabel">Загрузить PDF документ</label>
         <label class="file-lbl" for="pd1-file">⬆ Загрузить PDF</label>
         <input type="file" id="pd1-file" accept=".pdf" style="display:none" onchange="handlePDF(this,'pd1')">
         <div id="pd1-preview"></div>
       </div>
       <div class="ablock">
-        <div class="ablk-title">Чекбокс 2 — Политика обработки</div>
-        <div class="arow"><div class="afull"><label class="alabel">Текст чекбокса</label><input class="ainput" id="pd2-text"></div></div>
+        <div class="ablk-title">Чекбокс 2 — Политика обработки персональных данных</div>
         <div class="arow">
-          <div><label class="alabel">Текст ссылки</label><input class="ainput" id="pd2-link-text" placeholder="— ознакомиться"></div>
-          <div><label class="alabel">URL документа</label><input class="ainput" id="pd2-url" placeholder="https://..."></div>
+          <div class="afull"><label class="alabel">Текст чекбокса</label>
+            <input class="ainput" id="pd2-text" value="Я согласен с политикой обработки персональных данных"></div>
         </div>
-        <label class="alabel">Загрузить PDF</label>
+        <div class="arow">
+          <div><label class="alabel">Текст ссылки на документ</label><input class="ainput" id="pd2-link-text" placeholder="— ознакомиться с политикой"></div>
+          <div><label class="alabel">URL документа (или загрузите ниже)</label><input class="ainput" id="pd2-url" placeholder="https://..."></div>
+        </div>
+        <label class="alabel">Загрузить PDF документ</label>
         <label class="file-lbl" for="pd2-file">⬆ Загрузить PDF</label>
         <input type="file" id="pd2-file" accept=".pdf" style="display:none" onchange="handlePDF(this,'pd2')">
         <div id="pd2-preview"></div>
@@ -1153,30 +866,34 @@ textarea.finput{resize:vertical;min-height:68px}
       <button class="asave" onclick="savePD()">Сохранить</button>
       <span class="amsg" id="am-pd">✓ Сохранено</span>
     </div>
+
     <!-- SETTINGS -->
     <div class="atab" id="t-settings">
-      <div class="atitle">Настройки</div><div class="asub">Учётные данные</div>
+      <div class="atitle">Настройки</div>
+      <div class="asub">Учётные данные</div>
       <div class="ablock">
         <div class="ablk-title">Смена логина и пароля</div>
         <div class="arow">
-          <div><label class="alabel">Новый логин</label><input class="ainput" id="sp-login"></div>
+          <div><label class="alabel">Новый логин</label><input class="ainput" id="sp-login" placeholder="Логин"></div>
           <div></div>
         </div>
         <div class="arow">
-          <div><label class="alabel">Новый пароль</label><input class="ainput" type="password" id="sp1"></div>
-          <div><label class="alabel">Повтор</label><input class="ainput" type="password" id="sp2"></div>
+          <div><label class="alabel">Новый пароль</label><input class="ainput" type="password" id="sp1" placeholder="Новый пароль"></div>
+          <div><label class="alabel">Повтор пароля</label><input class="ainput" type="password" id="sp2" placeholder="Повторите пароль"></div>
         </div>
       </div>
       <div class="ablock">
         <div class="ablk-title">Сброс данных</div>
-        <p style="font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.8">Удалит все настройки, фото, заказы.</p>
+        <p style="font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.8">Удалит все настройки, фото, заказы. Вернёт сайт к исходному состоянию.</p>
         <button class="mbtn s" style="border-color:var(--red);color:var(--red)" onclick="resetAll()">Сбросить всё</button>
       </div>
       <button class="asave" onclick="saveSettings()">Сохранить</button>
       <span class="amsg" id="am-settings">✓ Сохранено</span>
     </div>
+
   </div>
 </div>
+
 <script>
 /* ═══════════════════════════════════════════
    DEFAULT DATA
@@ -1373,7 +1090,20 @@ const gLogin=()=>LS('a_login',DEF_LOGIN);
 const gPwd=()=>LS('a_pwd',DEF_PWD);
 
 /* ═══════ INIT ═══════ */
-/* DOMContentLoaded is defined in the override section below */
+document.addEventListener('DOMContentLoaded',async()=>{
+  const loader=document.getElementById('fb-loader');
+  if(loader)loader.style.display='flex';
+  await _loadFirestore();
+  if(loader)loader.style.display='none';
+  applyColors();
+  const savedFont=LS('font','classic');
+  if(savedFont!=='classic')applyFont(savedFont,null);
+  applyTexts();renderProducts();renderCalc();renderContacts();updatePDCheckboxes('');updateBadge();renderDocsPublic();
+  // Auto-open admin login if ?admin=1 in URL
+  if(location.search.includes('admin=1')||location.hash.includes('admin')){
+    _showLoginModal();
+  }
+});
 
 /* ═══════ COLORS ═══════ */
 function applyColors(c){
@@ -1450,9 +1180,18 @@ function saveDesign(){
 }
 
 /* ═══════ TEXTS ═══════ */
-function _applyTexts_old(){
+function applyTexts(){
   const t=gT();
-  if(document.getElementById('site-title-tag'))document.getElementById('site-title-tag').textContent=(t.logo||'JOYSTICK');
+  document.getElementById('site-title-tag').textContent=(t.logo||'JOYSTICK')+' — Premium Disposable';
+  document.getElementById('nav-logo-text').textContent=t.logo||'Joystick';
+  document.getElementById('hero-sub').textContent=t.sub||DEF_TXT.sub;
+  const w=(t.logo||'Joystick');
+  const mid=Math.floor(w.length/2);
+  document.getElementById('hero-ttl').innerHTML=w.slice(0,mid)+'<em>'+w.slice(mid)+'</em>';
+  document.getElementById('hero-dsc').textContent=t.desc||DEF_TXT.desc;
+  document.getElementById('contact-dsc').textContent=t.cdesc||DEF_TXT.cdesc;
+  document.getElementById('ftr-logo').textContent=t.flogo||DEF_TXT.flogo;
+  document.getElementById('ftr-text').textContent=t.ftext||DEF_TXT.ftext;
 }
 
 /* ═══════ PERSONAL DATA ═══════ */
@@ -1463,12 +1202,23 @@ function updatePDCheckboxes(prefix){
   const l2=document.getElementById(prefix+'pd2-label');
   if(l1){
     l1.innerHTML=pd.t1||'Я согласен на обработку моих персональных данных';
-    if(pd.url1){l1.innerHTML+=` <a href="${pd.url1}" target="_blank">${pd.lt1||'— ознакомиться'}</a>`;}
+    if(pd.url1){
+      l1.innerHTML+=` <a href="javascript:void(0)" onclick="openPDUrl('pd1')" style="color:var(--gold);text-decoration:underline">${pd.lt1||'— ознакомиться'}</a>`;
+    }
   }
   if(l2){
     l2.innerHTML=pd.t2||'Я согласен с политикой обработки персональных данных';
-    if(pd.url2){l2.innerHTML+=` <a href="${pd.url2}" target="_blank">${pd.lt2||'— ознакомиться'}</a>`;}
+    if(pd.url2){
+      l2.innerHTML+=` <a href="javascript:void(0)" onclick="openPDUrl('pd2')" style="color:var(--gold);text-decoration:underline">${pd.lt2||'— ознакомиться'}</a>`;
+    }
   }
+}
+
+// Open personal data PDF (handles both data: base64 and https: URLs)
+function openPDUrl(key){
+  const pd=gPD();
+  const url=pd['url'+(key==='pd1'?'1':'2')];
+  if(url)openDocURL(url);
 }
 
 function handlePDF(input,key){
@@ -2071,21 +1821,56 @@ function updateEditTotal(){
 
 function saveEditedOrder(){
   const orders=gO();const o=orders.find(x=>x.id===editingOrderId);if(!o)return;
+
+  // Сохраняем снимок в историю ДО изменений
   if(!o.history)o.history=[];
-  o.history.push({savedAt:new Date().toLocaleString('ru'),customer:{...o.customer},items:JSON.parse(JSON.stringify(o.items)),total:o.total});
+  o.history.push({
+    savedAt:new Date().toLocaleString('ru'),
+    customer:{...o.customer},
+    items:JSON.parse(JSON.stringify(o.items)),
+    total:o.total
+  });
+
+  // Обновляем данные покупателя
   o.customer.fio=v('edit-fio')||o.customer.fio;
   o.customer.phone=v('edit-phone')||o.customer.phone;
   o.customer.email=v('edit-email')||'';
   o.customer.comment=v('edit-comment')||'';
+
+  // Обновляем позиции И синхронизируем склад
   let newTotal=0;
   o.items.forEach((it,i)=>{
-    const qty=parseInt(document.getElementById('eiq-'+i)?.value)||0;
-    const unitPrice=it.pw||Math.round((it.line||0)/Math.max(it.qty,1));
-    it.qty=qty;it.pw=unitPrice;it.line=qty*unitPrice;newTotal+=it.line;
+    const newQty=parseInt(document.getElementById('eiq-'+i)?.value)||0;
+    const oldQty=it.qty||0;
+    const unitPrice=it.pw||Math.round((it.line||0)/Math.max(oldQty,1));
+
+    // Корректируем склад: возвращаем старое кол-во, списываем новое
+    if(it.prodId!==undefined&&it.flIdx!==undefined){
+      const st=getStock(it.prodId,it.flIdx);
+      if(st!==null){
+        // diff > 0 → заказ уменьшился → возвращаем на склад
+        // diff < 0 → заказ увеличился → списываем со склада
+        const diff=oldQty-newQty;
+        setStock(it.prodId,it.flIdx,Math.max(0,st+diff));
+      }
+    }
+
+    it.qty=newQty;
+    it.pw=unitPrice;
+    it.line=newQty*unitPrice;
+    newTotal+=it.line;
   });
+
   o.items=o.items.filter(it=>it.qty>0);
   o.total=newTotal;
-  SS('orders',orders);renderOrdersAdmin();
+
+  SS('orders',orders);
+  renderOrdersAdmin();
+
+  // Обновляем таблицу калькулятора на сайте (бейджи остатков)
+  renderCalc();
+  updCalc();
+
   closeModal('edit-order-modal');
 }
 
@@ -2315,8 +2100,12 @@ function renderDocsAdmin(){
     </div>`).join('');
 }
 
+// Global cache for doc click access (avoids inline JSON/quote issues)
+let _docsClickCache = [];
+
 function renderDocsPublic(){
   const docs=gDocs();
+  _docsClickCache=docs;
   const grid=document.getElementById('docs-render');
   const empty=document.getElementById('docs-empty');
   const section=document.getElementById('docs');
@@ -2329,8 +2118,8 @@ function renderDocsPublic(){
   }
   if(section)section.style.display='block';
   if(empty)empty.style.display='none';
-  grid.innerHTML=docs.map(d=>`
-    <div class="doc-card" onclick="openDocURL(${JSON.stringify(d.url)})" style="cursor:pointer">
+  grid.innerHTML=docs.map((d,i)=>`
+    <div class="doc-card" onclick="openDocByIdx(${i})" style="cursor:pointer">
       <div class="doc-icon">📄</div>
       <div class="doc-info">
         <div class="doc-name">${d.name}</div>
@@ -2338,6 +2127,11 @@ function renderDocsPublic(){
         <div style="font-size:9px;color:var(--gold-dim);letter-spacing:2px;text-transform:uppercase;margin-top:6px">Открыть PDF ↗</div>
       </div>
     </div>`).join('');
+}
+
+function openDocByIdx(i){
+  const d=_docsClickCache[i];
+  if(d&&d.url)openDocURL(d.url);
 }
 
 /* ═══════ TEXTS/CONTACTS SAVE ═══════ */
@@ -2378,439 +2172,6 @@ function v(id){const el=document.getElementById(id);return el?el.value.trim():nu
 function setValue(id,val){const el=document.getElementById(id);if(el)el.value=val||'';}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 function showMsg(id){const el=document.getElementById(id);if(!el)return;el.style.display='inline';setTimeout(()=>el.style.display='none',3000);}
-</script>
-
-/* ═══════════════════════════════════════════
-   NEW CART-BASED OVERRIDES
-   These replace the old calc/render functions
-═══════════════════════════════════════════ */
-
-/* ── PAGE NAVIGATION ── */
-function showPage(name, linkEl){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
-  const pg=document.getElementById('page-'+name);
-  if(pg)pg.classList.add('active');
-  if(linkEl)linkEl.classList.add('active');
-  window.scrollTo(0,0);
-}
-
-/* ── CART STATE ── */
-// cart: [{prodId, flIdx, prodName, en, ru, pw, qty, img, desc}]
-let _cart = [];
-
-function cartKey(prodId, flIdx){ return prodId+'_'+flIdx; }
-
-function getCartItem(prodId, flIdx){
-  return _cart.find(it=>it.prodId===prodId&&it.flIdx===flIdx);
-}
-
-function cartAdd(prodId, flIdx, delta){
-  const prods=gP();
-  const prod=prods.find(p=>p.id===prodId);
-  if(!prod)return;
-  const f=prod.flavors[flIdx];
-  if(!f)return;
-  let item=getCartItem(prodId,flIdx);
-  if(!item){
-    item={prodId,flIdx,prodName:prod.name,en:f.en,ru:f.ru,pw:prod.pw,qty:0,img:f.img||'',desc:f.desc||''};
-    _cart.push(item);
-  }
-  item.qty=Math.max(0,item.qty+delta);
-  if(item.qty===0) _cart=_cart.filter(it=>!(it.prodId===prodId&&it.flIdx===flIdx));
-  renderCartUI();
-  // update qty display on card
-  const span=document.getElementById(`cqty-${prodId}-${flIdx}`);
-  const row=document.getElementById(`cctrl-${prodId}-${flIdx}`);
-  const addBtn=document.getElementById(`cadd-${prodId}-${flIdx}`);
-  const curQty=getCartItem(prodId,flIdx)?.qty||0;
-  if(span)span.textContent=curQty;
-  if(row)row.style.display=curQty>0?'flex':'none';
-  if(addBtn)addBtn.style.display=curQty>0?'none':'flex';
-}
-
-function clearCart(){
-  _cart=[];
-  renderCartUI();
-  // reset all qty displays
-  document.querySelectorAll('[id^=cqty-]').forEach(el=>el.textContent='0');
-  document.querySelectorAll('[id^=cctrl-]').forEach(el=>el.style.display='none');
-  document.querySelectorAll('[id^=cadd-]').forEach(el=>el.style.display='flex');
-}
-
-function renderCartUI(){
-  const list=document.getElementById('cart-items-list');
-  const countEl=document.getElementById('cart-count');
-  const totalEl=document.getElementById('cart-total-val');
-  const checkoutBtn=document.getElementById('cart-checkout-btn');
-  const clearBtn=document.getElementById('cart-clear-btn');
-  const preNotice=document.getElementById('cart-pre-notice');
-  if(!list)return;
-
-  const totalQty=_cart.reduce((s,it)=>s+it.qty,0);
-  const totalSum=_cart.reduce((s,it)=>s+it.qty*it.pw,0);
-
-  if(countEl){countEl.textContent=totalQty;countEl.classList.toggle('show',totalQty>0);}
-  if(totalEl)totalEl.textContent=totalSum>0?totalSum.toLocaleString('ru')+' ₽':'0 ₽';
-  if(checkoutBtn)checkoutBtn.style.display=_cart.length?'block':'none';
-  if(clearBtn)clearBtn.style.display=_cart.length?'block':'none';
-
-  // check for preorders
-  let hasPreorder=false;
-  _cart.forEach(it=>{
-    const st=getStock(it.prodId,it.flIdx);
-    if(st!==null&&it.qty>st)hasPreorder=true;
-  });
-  if(preNotice)preNotice.style.display=hasPreorder?'block':'none';
-
-  if(!_cart.length){
-    list.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">🛒</div><div class="cart-empty-text">Корзина пуста</div></div>';
-    return;
-  }
-
-  list.innerHTML=_cart.map(it=>{
-    const st=getStock(it.prodId,it.flIdx);
-    const lineTotal=it.qty*it.pw;
-    const preQty=st!==null?Math.max(0,it.qty-st):0;
-    return `<div class="cart-item">
-      <div class="cart-item-info">
-        <div class="cart-item-en">${it.en}</div>
-        <div class="cart-item-ru">${it.ru}</div>
-        <div class="cart-item-prod">${it.prodName}</div>
-        ${preQty>0?`<div class="cart-item-pre">${preQty} шт — предзаказ</div>`:''}
-      </div>
-      <div class="cart-item-qty">
-        <button onclick="cartAdd('${it.prodId}',${it.flIdx},-1)">−</button>
-        <span>${it.qty}</span>
-        <button onclick="cartAdd('${it.prodId}',${it.flIdx},1)">+</button>
-      </div>
-      <div class="cart-item-price">${lineTotal.toLocaleString('ru')} ₽</div>
-      <button class="cart-item-remove" onclick="cartAdd('${it.prodId}',${it.flIdx},-${it.qty})" title="Удалить">✕</button>
-    </div>`;
-  }).join('');
-}
-
-function toggleCart(){
-  document.getElementById('cart-overlay').classList.toggle('open');
-}
-
-/* ── CHECKOUT ── */
-function openCheckout(){
-  if(!_cart.length){alert('Корзина пуста');return;}
-  // Sync PD labels
-  updatePDCheckboxes('co-');
-  // Fill items summary
-  const items=buildCartItems();
-  const hasPreorder=items.some(it=>it.preQty>0);
-  const total=items.reduce((s,it)=>s+it.line,0);
-  document.getElementById('co-sub').textContent=hasPreorder?
-    'Часть товара будет оформлена как предзаказ':'Проверьте заказ и заполните данные';
-  document.getElementById('co-items-summary').innerHTML=items.map(it=>`
-    <div class="checkout-item-line">
-      <span>${it.name} × ${it.qty}${it.preQty>0?`<span class="checkout-item-pre-label">предзаказ</span>`:''}</span>
-      <span>${it.line.toLocaleString('ru')} ₽</span>
-    </div>`).join('');
-  document.getElementById('co-total-val').textContent=total.toLocaleString('ru')+' ₽';
-  ['co-fio','co-phone','co-email','co-comment'].forEach(id=>setValue(id,''));
-  document.querySelectorAll('#checkout-overlay .co-err').forEach(e=>e.style.display='none');
-  document.querySelectorAll('#checkout-overlay .co-input').forEach(e=>e.classList.remove('error'));
-  document.getElementById('co-pd1').checked=false;
-  document.getElementById('co-pd2').checked=false;
-  document.getElementById('co-form').style.display='block';
-  document.getElementById('co-success').style.display='none';
-  document.getElementById('checkout-overlay').classList.add('open');
-  document.getElementById('cart-overlay').classList.remove('open');
-}
-
-function closeCheckout(){
-  document.getElementById('checkout-overlay').classList.remove('open');
-}
-
-function buildCartItems(){
-  return _cart.map(it=>{
-    const st=getStock(it.prodId,it.flIdx);
-    const inStockQty=st===null?it.qty:Math.min(it.qty,st);
-    const preQty=st===null?0:Math.max(0,it.qty-st);
-    return {
-      name:it.en+' / '+it.ru,qty:it.qty,pw:it.pw,
-      line:it.qty*it.pw,inStockQty,preQty,
-      prodId:it.prodId,flIdx:it.flIdx,prodName:it.prodName
-    };
-  });
-}
-
-function submitCheckout(){
-  const fio=v('co-fio'),phone=v('co-phone'),email=v('co-email'),comment=v('co-comment');
-  let ok=true;
-  if(!validateFIO(fio)){setErr2('co-fio','coe-fio',true);ok=false;}else setErr2('co-fio','coe-fio',false);
-  if(!validatePhone(phone)){setErr2('co-phone','coe-phone',true);ok=false;}else setErr2('co-phone','coe-phone',false);
-  if(email&&!validateEmail(email)){setErr2('co-email','coe-email',true);ok=false;}else setErr2('co-email','coe-email',false);
-  const pd1=document.getElementById('co-pd1')?.checked;
-  const pd2=document.getElementById('co-pd2')?.checked;
-  const epd=document.getElementById('coe-pd');
-  if(!pd1||!pd2){if(epd)epd.style.display='block';ok=false;}else{if(epd)epd.style.display='none';}
-  if(!ok)return;
-
-  const items=buildCartItems();
-  const total=items.reduce((s,it)=>s+it.line,0);
-  const hasPreorder=items.some(it=>it.preQty>0);
-
-  const order={
-    id:(hasPreorder?'PRE-':'ORD-')+Date.now(),
-    date:new Date().toLocaleString('ru'),
-    status:'new',
-    type:hasPreorder?'preorder':'order',
-    customer:{fio,phone,email,comment},
-    items,total,history:[]
-  };
-  const orders=gO();orders.unshift(order);SS('orders',orders);updateBadge();
-
-  // Deduct stock
-  items.forEach(it=>{
-    const st=getStock(it.prodId,it.flIdx);
-    if(st!==null){setStock(it.prodId,it.flIdx,Math.max(0,st-it.inStockQty));}
-  });
-
-  // Send to messenger
-  const c=gC();
-  const prefix=hasPreorder?'🕐 ПРЕДЗАКАЗ':'📦 ЗАКАЗ';
-  let msg=`${prefix} ${order.id}\n👤 ${fio}\n📞 ${phone}${email?'\n✉ '+email:''}\n\n`;
-  items.forEach(it=>{
-    const mark=it.preQty>0?`[${it.inStockQty} в наличии + ${it.preQty} предзаказ] `:'';
-    msg+=`• ${mark}${it.name} ×${it.qty} = ${it.line.toLocaleString('ru')} ₽\n`;
-  });
-  msg+=`\nИТОГО: ${total.toLocaleString('ru')} ₽`;
-  if(comment)msg+=`\n💬 ${comment}`;
-  if(c.tg){const h=c.tg.startsWith('http')?c.tg:`https://t.me/${c.tg.replace('@','')}`;window.open(h,'_blank');}
-  else if(c.wa){window.open(`https://wa.me/${c.wa.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`,'_blank');}
-
-  // Show success
-  document.getElementById('co-form').style.display='none';
-  document.getElementById('co-success').style.display='block';
-  clearCart();
-  renderProducts(); // refresh stock badges
-}
-
-function setErr2(inputId,errId,show){
-  const inp=document.getElementById(inputId);
-  const err=document.getElementById(errId);
-  if(inp)inp.classList.toggle('error',show);
-  if(err)err.style.display=show?'block':'none';
-}
-
-/* ── OVERRIDE: renderProducts → card grid ── */
-function renderProducts(){
-  const prods=gP(),imgs=gI();
-  document.getElementById('products-render').innerHTML=prods.map(p=>{
-    const imgSrc=imgs[p.id]||DEF_IMGS[p.id]||'';
-    return `<div class="prod-group">
-      <div class="prod-group-header">
-        <img class="prod-group-img" src="${imgSrc}" alt="${p.name}" onerror="this.style.opacity=.3">
-        <div class="prod-group-info">
-          <div class="prod-group-name">${p.name}</div>
-          <div class="prod-group-sub">${p.sub}</div>
-          <div class="prod-group-specs">${p.specs.map(s=>`<span class="spec-chip">${s}</span>`).join('')}</div>
-        </div>
-        <div class="prod-group-price">
-          <div class="prod-price-label">Закупочная цена</div>
-          <div class="prod-price-val">${p.pw.toLocaleString('ru')} <span style="font-size:16px;color:var(--muted)">₽</span></div>
-          <div class="prod-price-retail">Розница: ${p.pr.toLocaleString('ru')} ₽</div>
-        </div>
-      </div>
-      <div class="flavors-cards">
-        ${p.flavors.map((f,fi)=>renderFlavorCard(p,f,fi)).join('')}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function renderFlavorCard(p, f, fi){
-  const st=getStock(p.id,fi);
-  let stockHtml='';
-  if(st===null) stockHtml=`<span class="sb sb-unlim">∞ без лимита</span>`;
-  else if(st===0) stockHtml=`<span class="sb sb-pre">предзаказ</span>`;
-  else if(st<=5) stockHtml=`<span class="sb sb-low">⚡ ${st} шт</span>`;
-  else stockHtml=`<span class="sb sb-ok">✓ ${st} шт</span>`;
-
-  const curQty=getCartItem(p.id,fi)?.qty||0;
-  const hasDetail=!!(f.img||f.desc);
-
-  return `<div class="flavor-card">
-    <div class="flavor-card-num">${String(fi+1).padStart(2,'0')}</div>
-    <div class="flavor-card-en">${f.en}</div>
-    <div class="flavor-card-ru">${f.ru}</div>
-    <div class="flavor-card-stock">${stockHtml}</div>
-    <div class="flavor-card-actions">
-      <button class="add-first-btn" id="cadd-${p.id}-${fi}"
-        style="display:${curQty>0?'none':'flex'}"
-        onclick="cartAdd('${p.id}',${fi},1)">+ В корзину</button>
-      <div class="qty-ctrl" id="cctrl-${p.id}-${fi}" style="display:${curQty>0?'flex':'none'}">
-        <button onclick="cartAdd('${p.id}',${fi},-1)">−</button>
-        <span id="cqty-${p.id}-${fi}">${curQty}</span>
-        <button onclick="cartAdd('${p.id}',${fi},1)">+</button>
-      </div>
-      ${hasDetail?`<button class="flavor-detail-btn" onclick="showFlavor(${JSON.stringify(f).replace(/"/g,'&quot;')})">Подробнее →</button>`:''}
-    </div>
-  </div>`;
-}
-
-/* ── OVERRIDE: renderContacts ── */
-function renderContacts(){
-  const c=gC();
-  // Update page contacts
-  const el=document.getElementById('contact-links');
-  if(el){
-    el.innerHTML='';
-    if(c.tg){const h=c.tg.startsWith('http')?c.tg:`https://t.me/${c.tg.replace('@','')}`;
-      el.innerHTML+=`<a class="contact-card" href="${h}" target="_blank"><div class="contact-card-icon">✈</div><div class="contact-card-type">Telegram</div><div class="contact-card-val">${c.tg.replace('https://t.me/','').replace('@','@')}</div></a>`;}
-    if(c.wa){const h=c.wa.startsWith('http')?c.wa:`https://wa.me/${c.wa.replace(/\D/g,'')}`;
-      el.innerHTML+=`<a class="contact-card" href="${h}" target="_blank"><div class="contact-card-icon">📱</div><div class="contact-card-type">WhatsApp</div><div class="contact-card-val">${c.wa}</div></a>`;}
-    if(c.ph) el.innerHTML+=`<a class="contact-card" href="tel:${c.ph.replace(/\s/g,'')}"><div class="contact-card-icon">📞</div><div class="contact-card-type">Телефон</div><div class="contact-card-val">${c.ph}</div></a>`;
-    if(c.em) el.innerHTML+=`<a class="contact-card" href="mailto:${c.em}"><div class="contact-card-icon">✉</div><div class="contact-card-type">Email</div><div class="contact-card-val">${c.em}</div></a>`;
-    if(!c.tg&&!c.wa&&!c.ph&&!c.em)
-      el.innerHTML='<p style="color:var(--muted);font-size:11px;letter-spacing:2px">Добавьте контакты в панели администратора</p>';
-  }
-  // Update nav contact items
-  const navTg=document.getElementById('nav-tg');
-  const navWa=document.getElementById('nav-wa');
-  const navPh=document.getElementById('nav-ph');
-  const navEm=document.getElementById('nav-em');
-  if(navTg){navTg.style.display=c.tg?'flex':'none';if(c.tg){const h=c.tg.startsWith('http')?c.tg:`https://t.me/${c.tg.replace('@','')}`;navTg.href=h;document.getElementById('nav-tg-text').textContent=c.tg.replace('https://t.me/','').slice(0,12);}}
-  if(navWa){navWa.style.display=c.wa?'flex':'none';if(c.wa){const h=c.wa.startsWith('http')?c.wa:`https://wa.me/${c.wa.replace(/\D/g,'')}`;navWa.href=h;document.getElementById('nav-wa-text').textContent='WhatsApp';}}
-  if(navPh){navPh.style.display=c.ph?'flex':'none';if(c.ph){navPh.href=`tel:${c.ph.replace(/\s/g,'')}`;document.getElementById('nav-ph-text').textContent=c.ph;}}
-  if(navEm){navEm.style.display=c.em?'flex':'none';if(c.em){navEm.href=`mailto:${c.em}`;document.getElementById('nav-em-text').textContent=c.em.slice(0,16);}}
-}
-
-/* ── OVERRIDE: renderDocsPublic ── */
-let _docsClickCache=[];
-function renderDocsPublic(){
-  const docs=gDocs();
-  _docsClickCache=docs;
-  const grid=document.getElementById('docs-render');
-  const empty=document.getElementById('docs-empty');
-  const navDocsLink=document.querySelector('.nav-links a:nth-child(2)');
-  if(!grid)return;
-  if(!docs.length){
-    grid.innerHTML='';
-    if(empty)empty.style.display='block';
-    return;
-  }
-  if(empty)empty.style.display='none';
-  grid.innerHTML=`<div class="docs-grid">`+docs.map((d,i)=>`
-    <div class="doc-card" onclick="openDocByIdx(${i})">
-      <div class="doc-icon">📄</div>
-      <div class="doc-info">
-        <div class="doc-name">${d.name}</div>
-        ${d.desc?`<div class="doc-desc">${d.desc}</div>`:''}
-        <div class="doc-open">Открыть PDF ↗</div>
-      </div>
-    </div>`).join('')+'</div>';
-}
-function openDocByIdx(i){const d=_docsClickCache[i];if(d&&d.url)openDocURL(d.url);}
-
-/* ── OVERRIDE: applyTexts (extended for new fields) ── */
-function applyTexts(){
-  const t=gT();
-  document.getElementById('site-title-tag').textContent=(t.logo||'JOYSTICK');
-  document.getElementById('nav-logo-text').textContent=t.logo||'Joystick';
-  document.getElementById('hero-sub').textContent=t.sub||DEF_TXT.sub;
-  const w=(t.logo||'Joystick');const mid=Math.floor(w.length/2);
-  document.getElementById('hero-ttl').innerHTML=w.slice(0,mid)+'<em>'+w.slice(mid)+'</em>';
-  document.getElementById('ftr-logo').textContent=t.flogo||DEF_TXT.flogo;
-  document.getElementById('ftr-text').textContent=t.ftext||DEF_TXT.ftext;
-  // New fields
-  const notice=document.getElementById('top-notice-bar');
-  if(notice)notice.textContent=t.notice||'Не является продажей';
-  const promoT=document.getElementById('promo-title');
-  if(promoT)promoT.textContent=t.promoTitle||'Интернет-каталог табачной продукции';
-  const promoTxt=document.getElementById('promo-text');
-  if(promoTxt)promoTxt.textContent=t.promoText||'Представляем вашему вниманию ознакомительный каталог табачной продукции для профессионалов рынка.';
-}
-
-/* ── OVERRIDE: saveTexts ── */
-function saveTexts(){
-  SS('texts',{
-    logo:v('tx-logo'),sub:v('tx-sub'),
-    notice:v('tx-notice'),
-    promoTitle:v('tx-promo-title'),
-    promoText:document.getElementById('tx-promo-text')?.value||'',
-    flogo:v('tx-flogo'),ftext:v('tx-ftext')
-  });
-  applyTexts();showMsg('am-texts');
-}
-
-/* ── OVERRIDE: fillAdminForms (extended) ── */
-const _origFillAdminForms=typeof fillAdminForms==='function'?fillAdminForms:null;
-function fillAdminForms(){
-  const t=gT(),c=gC(),pd=gPD();
-  setValue('tx-logo',t.logo||DEF_TXT.logo);
-  setValue('tx-sub',t.sub||DEF_TXT.sub);
-  setValue('tx-notice',t.notice||'Не является продажей');
-  setValue('tx-promo-title',t.promoTitle||'Интернет-каталог табачной продукции');
-  const ptEl=document.getElementById('tx-promo-text');
-  if(ptEl)ptEl.value=t.promoText||'';
-  setValue('tx-flogo',t.flogo||DEF_TXT.flogo);
-  setValue('tx-ftext',t.ftext||DEF_TXT.ftext);
-  setValue('cx-tg',c.tg||'');setValue('cx-wa',c.wa||'');setValue('cx-ph',c.ph||'');setValue('cx-em',c.em||'');
-  setValue('pd1-text',pd.t1||'');setValue('pd1-link-text',pd.lt1||'');
-  setValue('pd2-text',pd.t2||'');setValue('pd2-link-text',pd.lt2||'');
-  setValue('sp-login',gLogin());
-  const pdf1=LS('pd1_pdf','');const pdf2=LS('pd2_pdf','');
-  if(pdf1){document.getElementById('pd1-preview').innerHTML=`<div class="pdf-preview"><span>📄</span><a href="javascript:void(0)" onclick="openPDF('pd1')">Открыть документ 1</a></div>`;}
-  if(pdf2){document.getElementById('pd2-preview').innerHTML=`<div class="pdf-preview"><span>📄</span><a href="javascript:void(0)" onclick="openPDF('pd2')">Открыть документ 2</a></div>`;}
-  const fn=LS('font','classic');
-  document.querySelectorAll('.font-opt').forEach(b=>b.classList.remove('act'));
-  const fo=document.querySelectorAll('.font-opt');
-  const fmap={classic:0,modern:1,editorial:2};
-  if(fo[fmap[fn]])fo[fmap[fn]].classList.add('act');
-  fillPopupAdminForm();
-}
-
-/* ── OVERRIDE: updatePDCheckboxes to also update checkout labels ── */
-function updatePDCheckboxes(prefix){
-  prefix=prefix||'';
-  const pd=gPD();
-  const l1=document.getElementById(prefix+'pd1-label');
-  const l2=document.getElementById(prefix+'pd2-label');
-  if(l1){
-    l1.innerHTML=pd.t1||'Я согласен на обработку моих персональных данных';
-    if(pd.url1)l1.innerHTML+=` <a href="javascript:void(0)" onclick="openPDUrl('pd1')" style="color:var(--gold);text-decoration:underline">${pd.lt1||'— ознакомиться'}</a>`;
-  }
-  if(l2){
-    l2.innerHTML=pd.t2||'Я согласен с политикой обработки персональных данных';
-    if(pd.url2)l2.innerHTML+=` <a href="javascript:void(0)" onclick="openPDUrl('pd2')" style="color:var(--gold);text-decoration:underline">${pd.lt2||'— ознакомиться'}</a>`;
-  }
-}
-
-/* ── Legacy stubs so old function calls don't break ── */
-function renderCalc(){}
-function updCalc(){}
-function openOrderModal(){openCheckout();}
-
-/* ── INIT OVERRIDE ── */
-document.addEventListener('DOMContentLoaded',async()=>{
-  const loader=document.getElementById('fb-loader');
-  if(loader)loader.style.display='flex';
-  await _loadFirestore();
-  if(loader)loader.style.display='none';
-  applyColors();
-  const savedFont=LS('font','classic');
-  if(savedFont!=='classic')applyFont(savedFont,null);
-  applyTexts();
-  renderProducts();
-  renderContacts();
-  updatePDCheckboxes('co-');
-  updatePDCheckboxes('');
-  updateBadge();
-  renderDocsPublic();
-  renderCartUI();
-  if(location.search.includes('admin=1')||location.hash.includes('admin')){
-    _showLoginModal();
-  } else {
-    showWelcomeIfNeeded();
-  }
-},{once:true});
-
 </script>
 </body>
 </html>
