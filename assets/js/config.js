@@ -1,6 +1,8 @@
-// Основные настройки сайта.
-// Менять здесь проще и безопаснее, чем искать значения по всему app.js.
-window.APP_CONFIG = {
+// Настройки облачной базы. GitHub хранит только файлы сайта, данные сайта лежат отдельно в Firestore.
+window.SITE_CONFIG = {
   firebaseProjectId: 'dedets-9cc2b',
-  firestoreCollectionPath: 'settings'
+  firestoreCollection: 'settings',
+  siteName: 'JOYSTICK',
+  adminDefaultLogin: 'CPJw1r',
+  adminDefaultPassword: 'joystick2024'
 };

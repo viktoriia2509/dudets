@@ -1,11 +1,11 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    // ДЕМО-ПРАВИЛА. Не использовать для реального публичного магазина.
-    // Они разрешают чтение и запись коллекции settings всем посетителям сайта.
-    match /settings/{document} {
-      allow read, write: if true;
+    // ВНИМАНИЕ: это только пример-заглушка.
+    // Для боевого сайта такие правила недостаточны.
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if false;
     }
   }
 }

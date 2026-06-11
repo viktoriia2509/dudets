@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="JOYSTICK — каталог одноразовых электронных устройств, документы и оформление заказа через корзину.">
-  <title>JOYSTICK — главная</title>
+  <meta name="description" content="Документы сайта JOYSTICK: персональные данные, cookie, согласия и документы по электронным сигаретам.">
+  <title>JOYSTICK — документы</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link id="gfont" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Noto+Sans:wght@300;400;500;700&family=PT+Sans:wght@400;700&family=Ubuntu:wght@300;400;500;700&family=Rubik:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;700&family=Source+Sans+3:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&family=Lora:wght@400;500;600;700&family=Merriweather:wght@300;400;700&family=Playfair+Display:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap&subset=cyrillic" rel="stylesheet">
   <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
-<body data-page="home">
+<body data-page="documents">
   <div id="app-loader" class="loader"><div class="loader-ring"></div><div>Загрузка</div></div>
-
   <header class="site-header">
     <a class="brand" href="index.html" data-site-logo>JOYSTICK</a>
     <button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()">Меню</button>
@@ -31,47 +30,13 @@
   </header>
 
   <main>
-    <section class="hero hero-home">
-      <div class="hero-copy">
-        <p class="eyebrow" data-hero-sub>Premium Disposable Series</p>
-        <h1 data-hero-title>JOYSTICK</h1>
-        <p class="hero-text" data-hero-desc>Премиальные одноразовые устройства. Каталог, документы, корзина и быстрый заказ.</p>
-        <div class="hero-actions">
-          <a class="primary-link" href="collection.html">Смотреть коллекцию</a>
-          <a class="secondary-link" href="documents.html">Документы</a>
-        </div>
-      </div>
-      <div class="hero-panel">
-        <div class="hero-card">
-          <span>18+</span>
-          <strong>Каталог для совершеннолетних пользователей</strong>
-          <p>Перед заказом пользователь подтверждает согласие с документами по персональным данным.</p>
-        </div>
-      </div>
+    <section class="page-hero compact">
+      <p class="eyebrow">Юридический раздел</p>
+      <h1>Документы</h1>
+      <p>Здесь размещаются документы по персональным данным, cookie-файлам и документам по электронным сигаретам.</p>
     </section>
-
-    <section class="home-section">
-      <div class="section-head">
-        <p class="section-num">01 / Навигация</p>
-        <h2>Разделы сайта</h2>
-      </div>
-      <div class="feature-grid">
-        <a class="feature-card" href="collection.html">
-          <span>Коллекция</span>
-          <h3>Товары, вкусы, цены и корзина</h3>
-          <p>Отдельная страница с карточками товаров. Выбор вкуса и добавление в корзину без калькулятора.</p>
-        </a>
-        <a class="feature-card" href="documents.html">
-          <span>Документы</span>
-          <h3>ПДн, cookie и сертификаты</h3>
-          <p>Политика обработки ПДн, согласие, cookie-файлы и документы по электронным сигаретам.</p>
-        </a>
-        <a class="feature-card" href="contacts.html">
-          <span>Контакты</span>
-          <h3>Каналы связи</h3>
-          <p>Telegram, WhatsApp, телефон и email появляются только после заполнения в админке.</p>
-        </a>
-      </div>
+    <section class="docs-section">
+      <div id="docs-list" class="docs-grid"></div>
     </section>
   </main>
 
