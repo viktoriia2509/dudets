@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Коллекция JOYSTICK: товары, вкусы, цены, описание и корзина.">
+  <title>JOYSTICK — коллекция</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link id="gfont" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Noto+Sans:wght@300;400;500;700&family=PT+Sans:wght@400;700&family=Ubuntu:wght@300;400;500;700&family=Rubik:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;700&family=Source+Sans+3:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&family=Lora:wght@400;500;600;700&family=Merriweather:wght@300;400;700&family=Playfair+Display:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap&subset=cyrillic" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+<body data-page="collection">
+  <div id="app-loader" class="loader"><div class="loader-ring"></div><div>Загрузка</div></div>
+  <header class="site-header">
+    <a class="brand" href="index.html" data-site-logo>JOYSTICK</a>
+    <button class="mobile-menu-btn" type="button" onclick="toggleMobileMenu()">Меню</button>
+    <nav class="main-nav" id="main-nav">
+      <a href="index.html" data-nav="home">Главная</a>
+      <a href="collection.html" data-nav="collection">Коллекция</a>
+      <a href="documents.html" data-nav="documents">Документы</a>
+      <a href="contacts.html" data-nav="contacts">Контакты</a>
+    </nav>
+    <div class="header-actions">
+      <button class="ghost-btn" type="button" onclick="openUserAuth('login')" data-auth-login>Вход</button>
+      <button class="ghost-btn" type="button" onclick="openUserAuth('register')" data-auth-register>Регистрация</button>
+      <button class="ghost-btn" type="button" onclick="openMyOrders()" data-my-orders hidden>Мои заказы</button>
+      <button class="cart-btn" type="button" onclick="openCart()">Корзина <span data-cart-count>0</span></button>
+      <button class="admin-dot" type="button" onclick="openAdminLogin()" title="Админ-панель">⚙</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero compact">
+      <p class="eyebrow">Каталог</p>
+      <h1>Коллекция</h1>
+      <p>Товары вынесены на отдельную страницу. Выберите вкус и добавьте позицию в корзину.</p>
+    </section>
+    <section class="catalog-section">
+      <div id="product-grid" class="product-grid"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div data-footer-logo>JOYSTICK</div>
+    <p data-footer-text>Оптовый поставщик · Россия</p>
+  </footer>
+  <div class="health-bar">Минздравсоцразвития России предупреждает: курение вредит Вашему здоровью · <b>18+</b></div>
+
+  <div id="modal-root"></div>
+  <script src="./assets/js/config.js"></script>
+  <script src="./assets/js/app.js"></script>
+</body>
+</html>
