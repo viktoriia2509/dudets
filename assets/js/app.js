@@ -708,3 +708,72 @@ function renderDocuments(){
   root.innerHTML=docs().map(d=>`<article class="doc-card ${d.url?'':'doc-disabled'}"><div class="doc-icon">📄</div><div><p class="doc-type">${esc(d.type)}</p><h3>${esc(d.name)}</h3><p>${esc(d.desc)}</p>${d.fileName?`<p class="doc-file-name">Файл: ${esc(d.fileName)}</p>`:''}<div class="doc-actions">${d.url?`<button class="primary-link" type="button" onclick='openDocUrl(${esc(jsArg(d.url))})'>Открыть</button>`:`<button class="secondary-btn" type="button">Файл не добавлен</button>`}</div></div></article>`).join('');
 }
 window.renderDocuments=renderDocuments;
+
+/* ===== V5 PATCH: separate stock management tab ===== */
+let adminStockDraft = null;
+
+mountAdminPanel = function(){
+  if(document.getElementById('admin-panel'))return;
+  const div=document.createElement('div'); div.id='admin-panel'; div.className='admin-layout';
+  div.innerHTML=`<aside class="admin-sidebar"><div class="admin-logo">ADMIN</div><div id="admin-status" class="admin-status"></div><div class="admin-nav">
+    ${adminNavButton('dashboard','Обзор')}${adminNavButton('orders','Заказы')}${adminNavButton('users','Пользователи')}${adminNavButton('stock','Склад / Остатки')}${adminNavButton('products','Товары')}${adminNavButton('docs','Документы')}${adminNavButton('design','Дизайн')}${adminNavButton('texts','Тексты')}${adminNavButton('contacts','Контакты')}${adminNavButton('settings','Настройки')}
+    <button onclick="closeAdmin()">Закрыть</button>
+  </div></aside><main class="admin-content" id="admin-content"></main>`;
+  document.body.appendChild(div);
+};
+
+renderAdminContent = function(tab){
+  const root=document.getElementById('admin-content'); if(!root)return; const st=document.getElementById('admin-status'); if(st)st.textContent=fbOk?'● Firestore онлайн':'● Только localStorage';
+  if(tab==='dashboard')root.innerHTML=adminHeader('Обзор','Сводка по сайту')+dashboardHtml();
+  if(tab==='orders')root.innerHTML=adminHeader('Заказы','Все заказы из корзины')+ordersAdminHtml();
+  if(tab==='users')root.innerHTML=adminHeader('Пользователи','Зарегистрированные пользователи и их заказы')+usersAdminHtml();
+  if(tab==='stock')root.innerHTML=adminHeader('Склад / Остатки','Здесь меняется количество товара по каждому вкусу. После заказа остатки списываются автоматически и сохраняются в Firestore.')+stockAdminHtml();
+  if(tab==='products')root.innerHTML=adminHeader('Товары','Редактирование товаров, вкусов, цен и картинок')+productsAdminHtml();
+  if(tab==='docs')root.innerHTML=adminHeader('Документы','Документы, которые отображаются на странице «Документы»')+docsAdminHtml();
+  if(tab==='design')root.innerHTML=adminHeader('Дизайн','Цвета, фон главной, шрифты и размеры. Сохраняется только по кнопке «Сохранить дизайн».')+designAdminHtml();
+  if(tab==='texts')root.innerHTML=adminHeader('Тексты','Главная страница, контакты и подвал')+textsAdminHtml();
+  if(tab==='contacts')root.innerHTML=adminHeader('Контакты','Каналы связи на странице «Контакты»')+contactsAdminHtml();
+  if(tab==='settings')root.innerHTML=adminHeader('Настройки','Логин и пароль админ-панели')+settingsAdminHtml();
+};
+
+refreshVisibleUi = function(){
+  applyDesign();applyTexts();setActiveNav();updateCartCount();updateAuthButtons();renderPage();
+  const st=document.getElementById('admin-status'); if(st)st.textContent=fbOk?'● Firestore онлайн':'● Только localStorage';
+  const editableTabs=['products','stock','docs','design','texts','contacts','settings'];
+  if(document.getElementById('admin-panel')&&document.getElementById('admin-panel').classList.contains('open')&&!editableTabs.includes(adminTab))renderAdminContent(adminTab);
+};
+
+function stockAdminHtml(){
+  adminStockDraft=clone(products());
+  const total=adminStockDraft.reduce((s,p)=>s+productTotalStock(p),0);
+  const rows=adminStockDraft.map((p,pi)=>stockProductBlockHtml(p,pi)).join('')||'<div class="empty-state">Товары пока не добавлены. Сначала добавьте товар во вкладке «Товары».</div>';
+  return `<div class="admin-save-line stock-save-top"><button class="primary-btn" onclick="saveAdminStock()">Сохранить остатки</button><button class="secondary-btn" onclick="renderAdminContent('stock')">Отменить изменения</button><span class="save-msg" id="stock-save-msg">Сохранено</span></div><div class="stock-total-panel"><strong>Всего единиц на складе:</strong> ${total} шт.</div><div class="stock-admin-list">${rows}</div>`;
+}
+function stockProductBlockHtml(p,pi){
+  const total=productTotalStock(p);
+  const rows=(p.flavors||[]).map((f,fi)=>stockFlavorRowHtml(p,f,pi,fi)).join('')||'<div class="stock-empty-line">У товара нет вкусов. Добавьте вкусы во вкладке «Товары».</div>';
+  return `<section class="stock-product-block"><div class="stock-product-head"><div><h3>${esc(p.name)}</h3><p>${esc(p.sub||'')}</p></div><strong>${total} шт.</strong></div><div class="stock-table"><div class="stock-row stock-row-head"><span>Вкус EN</span><span>Вкус RU</span><span>Остаток</span></div>${rows}</div></section>`;
+}
+function stockFlavorRowHtml(p,f,pi,fi){
+  return `<div class="stock-row"><span>${esc(f.en||'')}</span><span>${esc(f.ru||'')}</span><input class="form-input stock-input" type="number" min="0" step="1" value="${flavorStock(f)}" id="stock-${pi}-${fi}" oninput="draftStockField(${pi},${fi},this.value)"></div>`;
+}
+function draftStockField(pi,fi,value){
+  if(!adminStockDraft||!adminStockDraft[pi]||!adminStockDraft[pi].flavors||!adminStockDraft[pi].flavors[fi])return;
+  adminStockDraft[pi].flavors[fi].stock=Math.max(0,Math.floor(Number(value||0)));
+}
+function saveAdminStock(){
+  if(!adminStockDraft)return;
+  saveKey('products',normalizeProducts(adminStockDraft));
+  if(page()==='collection')renderProducts();
+  renderAdminContent('stock');
+  showSave('stock-save-msg');
+}
+
+dashboardHtml = function(){
+  const totalStock=products().reduce((s,p)=>s+productTotalStock(p),0);
+  return `<div class="admin-grid"><div class="admin-card"><h3>Товары</h3><p><strong>${products().length}</strong> линеек</p></div><div class="admin-card"><h3>Склад</h3><p><strong>${totalStock}</strong> единиц товара</p></div><div class="admin-card"><h3>Заказы</h3><p><strong>${orders().length}</strong> всего · <strong>${orders().filter(o=>o.status==='new').length}</strong> новых</p></div><div class="admin-card"><h3>Пользователи</h3><p><strong>${users().length}</strong> зарегистрировано</p></div><div class="admin-card"><h3>База</h3><p>${fbOk?'Firestore доступен':'Работает только локальное хранилище браузера'}</p></div></div>`;
+};
+
+window.draftStockField=draftStockField;
+window.saveAdminStock=saveAdminStock;
+window.stockAdminHtml=stockAdminHtml;
